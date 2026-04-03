@@ -49,10 +49,11 @@ router.post(
   validate({ body: submitSchema }),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
+      const answer: string | string[] = req.body.answer;
       const result = await submitExerciseAnswer(
         req.params.id,
         req.params.exerciseId,
-        req.body.answer,
+        answer,
       );
       res.status(200).json(result);
     } catch (err) {
