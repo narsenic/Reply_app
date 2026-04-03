@@ -16,14 +16,14 @@ RUN npm ci
 COPY client/ client/
 COPY server/ server/
 
+# Generate Prisma client BEFORE building (TypeScript needs the types)
+RUN npx prisma generate --schema=server/prisma/schema.prisma
+
 # Build client (Vite outputs to server/public/)
 RUN npm run build --workspace=client
 
 # Build server (TypeScript to server/dist/)
 RUN npm run build --workspace=server
-
-# Generate Prisma client
-RUN npx prisma generate --schema=server/prisma/schema.prisma
 
 # --- Production stage ---
 FROM node:20-alpine
