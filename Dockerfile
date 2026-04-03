@@ -48,7 +48,6 @@ COPY --from=builder /app/server/public/ server/public/
 
 EXPOSE 3001
 
-ENV PORT=3001
 ENV NODE_ENV=production
 
 CMD ["sh", "-c", "npx prisma migrate deploy --schema=server/prisma/schema.prisma && node server/dist/index.js"]
