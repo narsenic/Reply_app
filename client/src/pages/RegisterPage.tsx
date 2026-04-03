@@ -13,41 +13,34 @@ export default function RegisterPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    try {
-      await register(email, password, displayName);
-      // Auto-login after registration and go to assessment
-      await login(email, password);
-      navigate('/assessment');
-    } catch (err: any) {
-      const msg = err?.message || err?.details?.email || 'Registration failed. Please try again.';
-      setError(typeof msg === 'string' ? msg : JSON.stringify(msg));
-    }
+    try { await register(email, password, displayName); await login(email, password); navigate('/assessment'); }
+    catch (err: any) { setError(err?.message || err?.details?.email || 'Registration failed.'); }
   };
 
   return (
     <div className="page">
-      <div style={cardStyle}>
+      <div style={card}>
         <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-          <div style={logoCircle}>Lë</div>
-          <h1 style={{ marginTop: '0.75rem', fontSize: '1.5rem' }}>Create your account</h1>
-          <p style={{ color: '#78716c', fontSize: '0.9rem' }}>Start learning Luxembourgish today</p>
+          <div style={logo}>💬</div>
+          <h1 style={{ fontFamily: "'Space Grotesk', sans-serif", marginTop: '0.75rem', fontSize: '1.4rem' }}>Create your account</h1>
+          <p style={{ color: '#999', fontSize: '0.88rem' }}>Start learning Luxembourgish today</p>
         </div>
         {error && <div className="error-display"><p>{error}</p></div>}
         <form onSubmit={handleSubmit}>
-          <label style={labelStyle}>Display Name<input type="text" value={displayName} onChange={e => setDisplayName(e.target.value)} required placeholder="Your name" style={inputStyle} /></label>
-          <label style={labelStyle}>Email<input type="email" value={email} onChange={e => setEmail(e.target.value)} required placeholder="you@example.com" style={inputStyle} /></label>
-          <label style={labelStyle}>Password<input type="password" value={password} onChange={e => setPassword(e.target.value)} required minLength={8} placeholder="Min 8 characters" style={inputStyle} /></label>
-          <button type="submit" disabled={loading} style={btnStyle}>{loading ? 'Creating account...' : 'Get started — it\'s free'}</button>
+          <label style={lbl}>Name<input type="text" value={displayName} onChange={e => setDisplayName(e.target.value)} required placeholder="Your name" style={inp} /></label>
+          <label style={lbl}>Email<input type="email" value={email} onChange={e => setEmail(e.target.value)} required placeholder="you@example.com" style={inp} /></label>
+          <label style={lbl}>Password<input type="password" value={password} onChange={e => setPassword(e.target.value)} required minLength={8} placeholder="Min 8 characters" style={inp} /></label>
+          <button type="submit" disabled={loading} style={btn}>{loading ? 'Creating...' : 'Get started free'}</button>
         </form>
-        <p style={{ textAlign: 'center', marginTop: '1.25rem', fontSize: '0.85rem', color: '#78716c' }}>Already have an account? <Link to="/login" style={linkStyle}>Log in</Link></p>
+        <p style={{ textAlign: 'center', marginTop: '1.25rem', fontSize: '0.85rem', color: '#999' }}>Already have an account? <Link to="/login" style={lnk}>Log in</Link></p>
       </div>
     </div>
   );
 }
 
-const cardStyle: React.CSSProperties = { background: '#fff', borderRadius: '16px', padding: '2rem', border: '1px solid #e7e5e4', maxWidth: '420px', margin: '3rem auto', boxShadow: '0 4px 20px rgba(0,0,0,0.06)' };
-const logoCircle: React.CSSProperties = { width: '48px', height: '48px', borderRadius: '14px', background: 'linear-gradient(135deg, #58cc02, #46a302)', color: '#fff', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '1rem' };
-const labelStyle: React.CSSProperties = { display: 'flex', flexDirection: 'column', gap: '0.3rem', marginBottom: '1rem', fontSize: '0.9rem', color: '#57534e', fontWeight: 600 };
-const inputStyle: React.CSSProperties = { padding: '0.65rem 0.75rem', borderRadius: '10px', border: '2px solid #e7e5e4', fontSize: '1rem' };
-const btnStyle: React.CSSProperties = { width: '100%', padding: '0.75rem', background: '#58cc02', color: '#fff', border: '2px solid #46a302', borderRadius: '12px', cursor: 'pointer', fontSize: '1rem', fontWeight: 700, marginTop: '0.5rem' };
-const linkStyle: React.CSSProperties = { color: '#58cc02', textDecoration: 'none', fontWeight: 600 };
+const card: React.CSSProperties = { background: '#fff', borderRadius: 16, padding: '2rem', border: '1px solid #eee', maxWidth: 400, margin: '3rem auto', boxShadow: '0 2px 16px rgba(0,0,0,0.04)' };
+const logo: React.CSSProperties = { width: 48, height: 48, borderRadius: 14, background: '#6C5CE7', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' };
+const lbl: React.CSSProperties = { display: 'flex', flexDirection: 'column', gap: '0.3rem', marginBottom: '1rem', fontSize: '0.88rem', color: '#666', fontWeight: 600 };
+const inp: React.CSSProperties = { padding: '0.6rem 0.75rem', borderRadius: 10, border: '1.5px solid #eee', fontSize: '0.95rem' };
+const btn: React.CSSProperties = { width: '100%', padding: '0.7rem', background: '#6C5CE7', color: '#fff', border: 'none', borderRadius: 12, cursor: 'pointer', fontSize: '0.95rem', fontWeight: 700, marginTop: '0.5rem' };
+const lnk: React.CSSProperties = { color: '#6C5CE7', textDecoration: 'none', fontWeight: 600 };
