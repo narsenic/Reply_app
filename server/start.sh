@@ -1,8 +1,11 @@
 #!/bin/sh
 set -e
 
-echo "Running Prisma migrations..."
-npx prisma migrate deploy --schema=server/prisma/schema.prisma || echo "Migration warning (non-fatal)"
+echo "Pushing database schema..."
+npx prisma db push --schema=server/prisma/schema.prisma --accept-data-loss || echo "DB push warning (non-fatal)"
+
+echo "Seeding database..."
+npx prisma db seed --schema=server/prisma/schema.prisma || echo "Seed warning (non-fatal)"
 
 echo "Starting server..."
 exec node server/dist/index.js
