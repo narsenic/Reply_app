@@ -45,9 +45,9 @@ export default function LoginPage() {
   );
 }
 
-const cardStyle: React.CSSProperties = { background: '#fff', borderRadius: '8px', padding: '2rem', border: '1px solid #e5e7eb', maxWidth: '400px', margin: '2rem auto' };
-const labelStyle: React.CSSProperties = { display: 'flex', flexDirection: 'column', gap: '0.25rem', marginBottom: '1rem', fontSize: '0.9rem', color: '#555', fontWeight: 500 };
-const inputStyle: React.CSSProperties = { padding: '0.6rem', borderRadius: '6px', border: '1px solid #d1d5db', fontSize: '1rem' };
-const btnStyle: React.CSSProperties = { width: '100%', padding: '0.7rem', background: '#2563eb', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '1rem', fontWeight: 500, marginTop: '0.5rem' };
+const cardStyle: React.CSSProperties = { background: '#fff', borderRadius: '16px', padding: '2rem', border: '1px solid #e7e5e4', maxWidth: '400px', margin: '3rem auto', boxShadow: '0 4px 20px rgba(0,0,0,0.06)' };
+const labelStyle: React.CSSProperties = { display: 'flex', flexDirection: 'column', gap: '0.3rem', marginBottom: '1rem', fontSize: '0.9rem', color: '#57534e', fontWeight: 600 };
+const inputStyle: React.CSSProperties = { padding: '0.65rem 0.75rem', borderRadius: '10px', border: '2px solid #e7e5e4', fontSize: '1rem', transition: 'border-color 0.15s' };
+const btnStyle: React.CSSProperties = { width: '100%', padding: '0.75rem', background: '#58cc02', color: '#fff', border: '2px solid #46a302', borderRadius: '12px', cursor: 'pointer', fontSize: '1rem', fontWeight: 700, marginTop: '0.5rem' };
 const linksStyle: React.CSSProperties = { display: 'flex', justifyContent: 'space-between', marginTop: '1.25rem', fontSize: '0.85rem' };
-const linkStyle: React.CSSProperties = { color: '#2563eb', textDecoration: 'none' };
+const linkStyle: React.CSSProperties = { color: '#58cc02', textDecoration: 'none', fontWeight: 600 };

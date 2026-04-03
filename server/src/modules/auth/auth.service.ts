@@ -29,6 +29,13 @@ export async function registerUser(input: RegisterInput) {
   const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
   const verificationToken = uuidv4();
 
+  // Ensure default language exists
+  await prisma.language.upsert({
+    where: { code: 'lb' },
+    update: {},
+    create: { code: 'lb', name: 'Luxembourgish', isDefault: true },
+  });
+
   const user = await prisma.user.create({
     data: {
       email,
