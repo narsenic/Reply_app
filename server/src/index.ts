@@ -18,6 +18,15 @@ import { registerGroupSocketHandlers } from './modules/groups/groups.socket';
 
 dotenv.config();
 
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception:', err);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (err) => {
+  console.error('Unhandled Rejection:', err);
+});
+
 const app = express();
 const PORT = process.env.PORT || 3001;
 
@@ -59,7 +68,12 @@ registerGroupSocketHandlers(io);
 
 // SPA catch-all: serve index.html for any non-API GET request (client-side routing)
 app.get('*', (_req: Request, res: Response) => {
-  res.sendFile(path.join(publicPath, 'index.html'));
+  const indexPath = path.join(publicPath, 'index.html');
+  try {
+    res.sendFile(indexPath);
+  } catch {
+    res.status(404).json({ message: 'Not found' });
+  }
 });
 
 // Global error handler — must be after all routes
@@ -83,7 +97,7 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   return res.status(500).json(body);
 });
 
-httpServer.listen(PORT, () => {
+httpServer.listen(Number(PORT), '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });
 
