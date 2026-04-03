@@ -1,0 +1,16 @@
+node_modules
+client/node_modules
+server/node_modules
+client/dist
+server/dist
+server/public
+.env
+.env.*
+!.env.example
+.git
+.gitignore
+.vscode
+.kiro
+*.md
+Dockerfile
+.dockerignore
