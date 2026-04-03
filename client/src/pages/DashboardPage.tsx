@@ -198,6 +198,41 @@ export default function DashboardPage() {
         ))}
       </div>
 
+      {/* Quick Actions */}
+      <div style={quickActionsStyle}>
+        <h2 style={{ fontSize: '1.1rem', marginBottom: '1rem' }}>Quick Actions</h2>
+        <div style={actionsGrid}>
+          <Link to="/assessment" style={actionCard}>
+            <span style={{ fontSize: '1.5rem' }}>🎯</span>
+            <div>
+              <strong style={{ display: 'block', color: '#1c1917' }}>Take Assessment</strong>
+              <span style={{ fontSize: '0.8rem', color: '#78716c' }}>Test your Luxembourgish level</span>
+            </div>
+          </Link>
+          <Link to="/self-select-level" style={actionCard}>
+            <span style={{ fontSize: '1.5rem' }}>📊</span>
+            <div>
+              <strong style={{ display: 'block', color: '#1c1917' }}>Set Your Level</strong>
+              <span style={{ fontSize: '0.8rem', color: '#78716c' }}>Self-select A1–C2</span>
+            </div>
+          </Link>
+          <Link to="/group-session" style={actionCard}>
+            <span style={{ fontSize: '1.5rem' }}>👥</span>
+            <div>
+              <strong style={{ display: 'block', color: '#1c1917' }}>Group Session</strong>
+              <span style={{ fontSize: '0.8rem', color: '#78716c' }}>Learn with others live</span>
+            </div>
+          </Link>
+          <Link to="/profile" style={actionCard}>
+            <span style={{ fontSize: '1.5rem' }}>⚙️</span>
+            <div>
+              <strong style={{ display: 'block', color: '#1c1917' }}>Profile & Settings</strong>
+              <span style={{ fontSize: '0.8rem', color: '#78716c' }}>Switch language, retake test</span>
+            </div>
+          </Link>
+        </div>
+      </div>
+
       {/* Lesson history */}
       <div style={historySectionStyle}>
         <h2 style={{ marginBottom: '1rem' }}>Lesson History</h2>
@@ -427,4 +462,26 @@ const tdStyle: React.CSSProperties = {
 const lessonLinkStyle: React.CSSProperties = {
   color: '#2563eb',
   textDecoration: 'none',
+};
+
+const quickActionsStyle: React.CSSProperties = {
+  marginBottom: '2rem',
+};
+
+const actionsGrid: React.CSSProperties = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
+  gap: '0.75rem',
+};
+
+const actionCard: React.CSSProperties = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '0.75rem',
+  padding: '1rem',
+  background: '#fff',
+  borderRadius: '12px',
+  border: '1px solid #e7e5e4',
+  textDecoration: 'none',
+  transition: 'border-color 0.15s, box-shadow 0.15s',
 };
