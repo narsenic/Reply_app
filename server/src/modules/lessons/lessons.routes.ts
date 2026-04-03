@@ -16,7 +16,7 @@ router.get(
   requireAuth,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await getLessonDetail(req.params.id, req.userId!);
+      const result = await getLessonDetail(req.params.id as string, req.userId!);
       res.status(200).json(result);
     } catch (err) {
       next(err);
@@ -30,7 +30,7 @@ router.get(
   requireAuth,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await getLessonTranscript(req.params.id);
+      const result = await getLessonTranscript(req.params.id as string);
       res.status(200).json(result);
     } catch (err) {
       next(err);
@@ -51,8 +51,8 @@ router.post(
     try {
       const answer: string | string[] = req.body.answer;
       const result = await submitExerciseAnswer(
-        req.params.id,
-        req.params.exerciseId,
+        req.params.id as string,
+        req.params.exerciseId as string,
         answer,
       );
       res.status(200).json(result);

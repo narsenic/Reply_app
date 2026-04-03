@@ -37,7 +37,7 @@ router.post(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const result = await submitAssessment(
-        req.params.id,
+        req.params.id as string,
         req.userId!,
         req.body.answers,
       );
@@ -66,7 +66,7 @@ userProficiencyRouter.put(
   validate({ body: selfSelectSchema }),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await selfSelectLevel(req.params.id, req.body.level);
+      const result = await selfSelectLevel(req.params.id as string, req.body.level);
       res.status(200).json(result);
     } catch (err) {
       next(err);

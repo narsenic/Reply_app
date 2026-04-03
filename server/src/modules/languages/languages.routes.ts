@@ -52,7 +52,7 @@ userLanguageRouter.put(
   validate({ body: switchLanguageSchema }),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await switchUserLanguage(req.params.id, req.body.languageCode);
+      const result = await switchUserLanguage(req.params.id as string, req.body.languageCode);
       res.status(200).json(result);
     } catch (err) {
       next(err);

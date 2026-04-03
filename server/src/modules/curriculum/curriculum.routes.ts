@@ -159,7 +159,7 @@ router.put(
   validate({ body: updateLessonSchema }),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const lesson = await updateLesson(req.params.id, req.body);
+      const lesson = await updateLesson(req.params.id as string, req.body);
       res.status(200).json(lesson);
     } catch (err) {
       next(err);
@@ -173,7 +173,7 @@ router.delete(
   requireAdmin,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await deleteLesson(req.params.id);
+      const result = await deleteLesson(req.params.id as string);
       res.status(200).json(result);
     } catch (err) {
       next(err);
