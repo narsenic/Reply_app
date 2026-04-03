@@ -46,8 +46,10 @@ RUN npx prisma generate --schema=server/prisma/schema.prisma
 COPY --from=builder /app/server/dist/ server/dist/
 COPY --from=builder /app/server/public/ server/public/
 
-EXPOSE 3001
+# Copy start script
+COPY server/start.sh server/start.sh
+RUN chmod +x server/start.sh
 
 ENV NODE_ENV=production
 
-CMD ["sh", "-c", "npx prisma migrate deploy --schema=server/prisma/schema.prisma && node server/dist/index.js"]
+CMD ["sh", "server/start.sh"]
