@@ -55,7 +55,7 @@ Incremental implementation of Phase 2 features for the Reply Luxembourgish learn
     - Use upsert on badge key to make seeding idempotent
     - _Requirements: 12.1, 12.4_
 
-- [ ] 3. Chapters module — backend
+- [x] 3. Chapters module — backend
   - [x] 3.1 Create chapters service (`server/src/modules/chapters/chapters.service.ts`)
     - Implement `listChapters(userId, level, learningPath)` — return chapters with status (locked/in_progress/completed) based on sequential unlock logic
     - Implement `getChapterDetail(userId, chapterId)` — return skill sections with lessons, speaking prompts, shadowing exercises, quiz unlock status
@@ -96,7 +96,7 @@ Incremental implementation of Phase 2 features for the Reply Luxembourgish learn
     - Test 403 when accessing locked chapter
     - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.7_
 
-- [ ] 4. Learning path selection — backend
+- [x] 4. Learning path selection — backend
   - [x] 4.1 Add learning path endpoints to auth/user module
     - Add PUT `/api/users/learning-path` endpoint to set/switch learning path
     - Validate learning path is 'sproochentest' or 'daily_life'
@@ -108,7 +108,7 @@ Incremental implementation of Phase 2 features for the Reply Luxembourgish learn
     - **Property 7: Learning path storage round trip** — store and read back returns same value
     - **Validates: Requirements 2.2**
 
-- [ ] 5. Chapter quizzes module — backend
+- [x] 5. Chapter quizzes module — backend
   - [x] 5.1 Create quizzes service (`server/src/modules/quizzes/quizzes.service.ts`)
     - Implement `getQuiz(userId, chapterId)` — return quiz questions; enforce unlock check (allSectionsComplete must be true)
     - Implement `submitQuiz(userId, chapterId, answers)` — calculate score as `round((correct/total)*100)`, determine pass/fail at 70%, store QuizAttempt, track highest score
@@ -145,7 +145,7 @@ Incremental implementation of Phase 2 features for the Reply Luxembourgish learn
 - [x] 6. Checkpoint — Ensure schema, chapters, and quizzes work
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 7. Gamification module — backend (XP, Streaks, Badges)
+- [x] 7. Gamification module — backend (XP, Streaks, Badges)
   - [x] 7.1 Create gamification service (`server/src/modules/gamification/gamification.service.ts`)
     - Implement `awardXP(userId, activityType)` — award 10 (lesson), 25 (quiz_pass), 50 (chapter_completion); create XPTransaction; update User.totalXp; idempotent for duplicate completions
     - Implement `updateStreak(userId)` — increment streak if first activity today (UTC), reset if missed day, update longestStreak
@@ -164,7 +164,7 @@ Incremental implementation of Phase 2 features for the Reply Luxembourgish learn
     - Register routes in server index
     - _Requirements: 10.2, 10.4, 11.3, 12.3, 12.4_
 
-  - [-] 7.3 Integrate XP/streak/badge awards into existing completion flows
+  - [x] 7.3 Integrate XP/streak/badge awards into existing completion flows
     - Hook `awardXP` into lesson completion in progress service (10 XP)
     - Hook `awardXP` into quiz pass in quizzes service (25 XP)
     - Hook `awardXP` into chapter completion in chapters service (50 XP)
@@ -196,8 +196,8 @@ Incremental implementation of Phase 2 features for the Reply Luxembourgish learn
     - Test summary includes all required fields
     - _Requirements: 10.1, 10.4, 11.1, 11.2, 11.4, 12.1_
 
-- [ ] 8. Leaderboard module — backend
-  - [ ] 8.1 Create leaderboard service (`server/src/modules/leaderboard/leaderboard.service.ts`)
+- [x] 8. Leaderboard module — backend
+  - [x] 8.1 Create leaderboard service (`server/src/modules/leaderboard/leaderboard.service.ts`)
     - Implement `getLeaderboard(userId, period, limit)` — query XP aggregates by period (weekly/monthly/all_time), sort descending, limit to 50, include user's own rank
     - Weekly: XP from current calendar week (Monday–Sunday UTC)
     - Monthly: XP from current calendar month UTC
@@ -205,7 +205,7 @@ Incremental implementation of Phase 2 features for the Reply Luxembourgish learn
     - Each entry includes displayName, totalXp, currentStreak, badgeCount
     - _Requirements: 14.1, 14.2, 14.3, 14.4, 14.5, 14.6_
 
-  - [ ] 8.2 Create leaderboard routes (`server/src/modules/leaderboard/leaderboard.routes.ts`)
+  - [x] 8.2 Create leaderboard routes (`server/src/modules/leaderboard/leaderboard.routes.ts`)
     - GET `/api/leaderboard?period=weekly|monthly|all_time&limit=50`
     - Add Zod validation for period and limit params
     - Register routes in server index
@@ -230,15 +230,15 @@ Incremental implementation of Phase 2 features for the Reply Luxembourgish learn
 - [x] 9. Checkpoint — Ensure gamification and leaderboard work
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 10. Enhanced speaking module — backend
-  - [ ] 10.1 Extend speaking service with record-and-compare and self-evaluation
+- [x] 10. Enhanced speaking module — backend
+  - [x] 10.1 Extend speaking service with record-and-compare and self-evaluation
     - Implement `recordAttempt(userId, exerciseId, audioFile)` — upload audio to S3, create SpeakingAttempt, return recordingUrl and referenceAudioUrl
     - Implement `selfEvaluate(attemptId, scores)` — validate scores 1–5 for each criterion, update SpeakingAttempt
     - Implement `getShadowingExercise(exerciseId)` — return native audio, transcript, available speeds [0.5, 0.75, 1.0, 1.25]
     - Implement `recordShadowingAttempt(userId, exerciseId, audioFile, playbackSpeed)` — validate speed, upload audio, create SpeakingAttempt with exerciseType 'shadowing'
     - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5, 5.6, 6.1, 6.2, 6.3, 6.4, 6.5, 6.6_
 
-  - [ ] 10.2 Add enhanced speaking routes
+  - [x] 10.2 Add enhanced speaking routes
     - POST `/api/speaking/record` (multipart) — record speaking attempt
     - POST `/api/speaking/self-evaluate` — submit self-evaluation
     - GET `/api/speaking/shadowing/:exerciseId` — get shadowing exercise
@@ -259,8 +259,8 @@ Incremental implementation of Phase 2 features for the Reply Luxembourgish learn
     - Test shadowing attempt tracks attempt number
     - _Requirements: 5.2, 5.5, 6.4, 6.6_
 
-- [ ] 11. Speaking prompts — backend
-  - [ ] 11.1 Add speaking prompts CRUD and retrieval
+- [x] 11. Speaking prompts — backend
+  - [x] 11.1 Add speaking prompts CRUD and retrieval
     - Implement `getPromptsByChapter(chapterId)` — return prompts with topic, vocabulary, guiding questions
     - Implement `createPrompt(data)` (admin) — validate required fields (topic, suggestedVocabulary, guidingQuestions non-empty, difficulty in easy/medium/hard)
     - Prompts categorized by difficulty within each level
@@ -272,8 +272,8 @@ Incremental implementation of Phase 2 features for the Reply Luxembourgish learn
     - **Property 25: Speaking prompt required fields** — non-empty topic, vocabulary, guidingQuestions array, valid difficulty
     - **Validates: Requirements 8.2, 8.3**
 
-- [ ] 12. Sproochentest exam preparation — backend
-  - [ ] 12.1 Add Sproochentest-specific exercise types and mock exams
+- [x] 12. Sproochentest exam preparation — backend
+  - [x] 12.1 Add Sproochentest-specific exercise types and mock exams
     - Implement oral production exercises: present topic card + picture, allow recording with 10-minute time limit
     - Implement listening comprehension exercises: play audio passage, present comprehension questions
     - Implement timed practice sessions with exam-equivalent time constraints
@@ -291,8 +291,8 @@ Incremental implementation of Phase 2 features for the Reply Luxembourgish learn
 - [x] 13. Checkpoint — Ensure speaking, prompts, and Sproochentest work
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 14. Peer matching and WebRTC signaling — backend
-  - [ ] 14.1 Create peer matching service (`server/src/modules/peers/peers.service.ts`)
+- [x] 14. Peer matching and WebRTC signaling — backend
+  - [x] 14.1 Create peer matching service (`server/src/modules/peers/peers.service.ts`)
     - Implement `getAvailablePeers(userId, level)` — return available users at same proficiency level
     - Implement `setAvailability(userId, status)` — validate status is 'available'|'busy'|'offline'
     - Implement `sendInvitation(userId, targetUserId)` — create invitation with 2-minute expiry, validate target is available
@@ -301,7 +301,7 @@ Incremental implementation of Phase 2 features for the Reply Luxembourgish learn
     - Implement invitation expiry: cancel after 2 minutes if not accepted
     - _Requirements: 7.1, 7.2, 7.3, 7.5, 7.6, 7.7, 7.8, 15.1, 15.2, 15.3, 15.4, 15.5_
 
-  - [ ] 14.2 Create peer routes and WebRTC signaling socket handlers
+  - [x] 14.2 Create peer routes and WebRTC signaling socket handlers
     - GET `/api/peers/available?level=` — list available peers
     - PUT `/api/peers/availability` — set availability status
     - POST `/api/peers/invite` — send invitation
@@ -358,22 +358,22 @@ Incremental implementation of Phase 2 features for the Reply Luxembourgish learn
 - [x] 16. Checkpoint — Ensure all backend modules work
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 17. Frontend — Learning path selection page
-  - [-] 17.1 Create PathSelectionPage component
+- [x] 17. Frontend — Learning path selection page
+  - [x] 17.1 Create PathSelectionPage component
     - Display two cards: Sproochentest Preparation and Daily Life Luxembourgish
     - On selection, call PUT `/api/users/learning-path`
     - Navigate to dashboard after selection
     - Show after onboarding/assessment if no learning path set
     - _Requirements: 2.1, 2.2_
 
-  - [ ] 17.2 Add learning path switch to ProfilePage
+  - [x] 17.2 Add learning path switch to ProfilePage
     - Add learning path selector in profile settings
     - Call PUT `/api/users/learning-path` on change
     - Show confirmation that progress is preserved
     - _Requirements: 2.5, 2.6_
 
-- [ ] 18. Frontend — Chapter map page
-  - [ ] 18.1 Create ChapterMapPage component
+- [x] 18. Frontend — Chapter map page
+  - [x] 18.1 Create ChapterMapPage component
     - Display all chapters for current level and learning path as a visual map
     - Each chapter card shows: title, progress rings for 4 skills, completion status (locked/in_progress/completed)
     - Locked chapters shown with lock icon, not clickable
@@ -381,7 +381,7 @@ Incremental implementation of Phase 2 features for the Reply Luxembourgish learn
     - Click on unlocked chapter navigates to chapter detail
     - _Requirements: 1.2, 1.7, 13.1, 13.2_
 
-  - [ ] 18.2 Create ChapterDetailPage component
+  - [x] 18.2 Create ChapterDetailPage component
     - Display four skill sections (Grammar, Reading, Listening, Speaking) with lesson lists
     - Show completion count per skill section
     - Show speaking prompts and shadowing exercises within speaking section
@@ -389,8 +389,8 @@ Incremental implementation of Phase 2 features for the Reply Luxembourgish learn
     - Show chapter progress overview with percentage per skill
     - _Requirements: 1.3, 1.4, 1.6, 4.1_
 
-- [ ] 19. Frontend — Chapter quiz page
-  - [ ] 19.1 Create ChapterQuizPage component
+- [x] 19. Frontend — Chapter quiz page
+  - [x] 19.1 Create ChapterQuizPage component
     - Fetch quiz questions from GET `/api/chapters/:chapterId/quiz`
     - Render questions by type: multiple-choice, fill-blank, listening-comprehension, speaking-prompt
     - Submit answers via POST `/api/chapters/:chapterId/quiz/submit`
@@ -399,21 +399,21 @@ Incremental implementation of Phase 2 features for the Reply Luxembourgish learn
     - Display completion animation and XP/badge notifications on pass
     - _Requirements: 4.2, 4.3, 4.4, 4.5, 4.7, 10.3, 13.4_
 
-- [ ] 20. Frontend — Enhanced speaking components
-  - [ ] 20.1 Create RecordAndCompare widget
+- [x] 20. Frontend — Enhanced speaking components
+  - [x] 20.1 Create RecordAndCompare widget
     - Play reference audio button
     - Record button using MediaRecorder API
     - Playback of user recording alongside reference audio
     - Re-record button (unlimited attempts)
     - _Requirements: 5.1, 5.2, 5.3, 5.4_
 
-  - [ ] 20.2 Create SelfEvaluationRubric component
+  - [x] 20.2 Create SelfEvaluationRubric component
     - Display 4 criteria: pronunciation, fluency, vocabulary, grammar accuracy
     - 1–5 scale selector for each criterion
     - Submit self-evaluation via POST `/api/speaking/self-evaluate`
     - _Requirements: 5.5, 5.6_
 
-  - [ ] 20.3 Create ShadowingExerciseView component
+  - [x] 20.3 Create ShadowingExerciseView component
     - Play native audio with speed selector (0.5x, 0.75x, 1.0x, 1.25x)
     - Record user attempt
     - Sequential playback: native audio then user recording
@@ -421,8 +421,8 @@ Incremental implementation of Phase 2 features for the Reply Luxembourgish learn
     - Display attempt count
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 6.6_
 
-- [ ] 21. Frontend — Peer practice page
-  - [ ] 21.1 Create PeerPracticePage component
+- [x] 21. Frontend — Peer practice page
+  - [x] 21.1 Create PeerPracticePage component
     - Display list of available peers at same level with count
     - Availability status toggle (available/busy/offline)
     - Send invitation button per peer
@@ -438,28 +438,28 @@ Incremental implementation of Phase 2 features for the Reply Luxembourgish learn
     - Handle connection failures gracefully
     - _Requirements: 7.3, 7.4, 7.7, 15.3_
 
-- [ ] 22. Frontend — Gamification UI components
-  - [ ] 22.1 Create XP and streak display components
+- [x] 22. Frontend — Gamification UI components
+  - [x] 22.1 Create XP and streak display components
     - XPDisplay: show total XP on dashboard
     - StreakCounter: show current streak with flame icon
     - XPGainNotification: toast notification on XP earn
     - _Requirements: 10.2, 10.3, 11.3_
 
-  - [ ] 22.2 Create BadgeShelf component
+  - [x] 22.2 Create BadgeShelf component
     - Display earned badges with icons and earnedAt dates on profile page
     - Display locked badges with unlock criteria
     - Badge earn notification popup
     - _Requirements: 12.2, 12.3, 12.4_
 
-  - [ ] 22.3 Update DashboardPage with gamification summary
+  - [x] 22.3 Update DashboardPage with gamification summary
     - Fetch GET `/api/gamification/summary`
     - Display total XP, current streak, badge count
     - Display chapter map link for current level
     - Show completion animation on chapter complete
     - _Requirements: 13.3, 13.4_
 
-- [ ] 23. Frontend — Leaderboard page
-  - [ ] 23.1 Create LeaderboardPage component
+- [x] 23. Frontend — Leaderboard page
+  - [x] 23.1 Create LeaderboardPage component
     - Fetch GET `/api/leaderboard?period=&limit=50`
     - Tab selector for weekly/monthly/all-time views
     - Display ranked list: rank, displayName, totalXp, currentStreak, badgeCount
@@ -477,8 +477,8 @@ Incremental implementation of Phase 2 features for the Reply Luxembourgish learn
     - Quiz management: add/edit/delete quiz questions per chapter
     - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5, 9.6, 9.7_
 
-- [ ] 25. Frontend — Sproochentest exam pages
-  - [ ] 25.1 Create SproochentestPracticePage component
+- [x] 25. Frontend — Sproochentest exam pages
+  - [x] 25.1 Create SproochentestPracticePage component
     - Oral production exercise: display topic card + picture, record with 10-minute timer
     - Listening comprehension exercise: play audio, answer questions
     - Timed practice mode with countdown timer
@@ -487,7 +487,7 @@ Incremental implementation of Phase 2 features for the Reply Luxembourgish learn
     - Topic card library browser by level
     - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7_
 
-- [ ] 26. Frontend routing — wire all new pages into App.tsx
+- [x] 26. Frontend routing — wire all new pages into App.tsx
   - [x] 26.1 Add routes for all new pages
     - `/path-selection` — PathSelectionPage (semi-public, after onboarding)
     - `/chapters` — ChapterMapPage (protected)
