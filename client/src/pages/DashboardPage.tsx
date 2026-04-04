@@ -41,6 +41,7 @@ const QUICK_ACTIONS = [
   { label: 'Sproochentest', path: '/sproochentest', icon: 'SP', color: '#00B894' },
   { label: 'Peer Practice', path: '/speaking/peer', icon: 'PP', color: '#E17055' },
   { label: 'Leaderboard', path: '/leaderboard', icon: 'LB', color: '#FDCB6E' },
+  { label: 'Study Planner', path: '/study-planner', icon: 'PL', color: '#00CEC9' },
   { label: 'Learning Path', path: '/path-selection', icon: 'LP', color: '#0984E3' },
   { label: 'Assessment', path: '/assessment', icon: 'AS', color: '#A29BFE' },
   { label: 'Group Session', path: '/group-session', icon: 'GS', color: '#FF7675' },

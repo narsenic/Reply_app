@@ -22,6 +22,7 @@ import ChapterQuizPage from './pages/ChapterQuizPage';
 import PeerPracticePage from './pages/PeerPracticePage';
 import LeaderboardPage from './pages/LeaderboardPage';
 import SproochentestPracticePage from './pages/SproochentestPracticePage';
+import StudyPlannerPage from './pages/StudyPlannerPage';
 
 function RootRedirect() {
   const { isAuthenticated } = useAuth();
@@ -59,6 +60,7 @@ export default function App() {
           <Route path="/speaking/peer" element={<PeerPracticePage />} />
           <Route path="/leaderboard" element={<LeaderboardPage />} />
           <Route path="/sproochentest" element={<SproochentestPracticePage />} />
+          <Route path="/study-planner" element={<StudyPlannerPage />} />
         </Route>
 
         {/* Admin-only routes */}

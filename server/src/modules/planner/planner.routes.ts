@@ -8,7 +8,7 @@ const router = Router();
 const estimateQuerySchema = z.object({
   currentLevel: z.enum(["A1", "A2", "B1", "B2", "C1", "C2"]),
   targetLevel: z.enum(["A1", "A2", "B1", "B2", "C1", "C2"]),
-  pace: z.enum(["regular", "intensive", "speed"]).default("regular"),
+  pace: z.enum(["relaxed", "regular", "intensive", "speed"]).default("regular"),
 });
 
 // GET /api/planner/estimate?currentLevel=A1&targetLevel=B1&pace=regular
