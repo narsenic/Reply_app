@@ -20,6 +20,7 @@ import gamificationRoutes from './modules/gamification/gamification.routes';
 import leaderboardRoutes from './modules/leaderboard/leaderboard.routes';
 import sproochentestRoutes from './modules/sproochentest/sproochentest.routes';
 import peersRoutes from './modules/peers/peers.routes';
+import plannerRoutes from './modules/planner/planner.routes';
 import { registerGroupSocketHandlers } from './modules/groups/groups.socket';
 import { registerPeerSocketHandlers } from './modules/peers/peers.socket';
 
@@ -66,6 +67,7 @@ app.use('/api/gamification', gamificationRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
 app.use('/api/sproochentest', sproochentestRoutes);
 app.use('/api/peers', peersRoutes);
+app.use('/api/planner', plannerRoutes);
 
 // HTTP server + Socket.IO
 const httpServer = createServer(app);
