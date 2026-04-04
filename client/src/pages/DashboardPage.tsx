@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+﻿import { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import apiClient from '../api/client';
@@ -38,10 +38,10 @@ const SKILL_LABELS: Record<string, string> = {
 };
 
 const SKILL_ICONS: Record<string, string> = {
-  grammar: '📝',
-  reading: '📖',
-  listening: '🎧',
-  speaking: '🗣️',
+  grammar: 'ðŸ“',
+  reading: 'ðŸ“–',
+  listening: 'ðŸŽ§',
+  speaking: 'ðŸ—£ï¸',
 };
 
 const MODE_KEY = 'learningMode';
@@ -161,7 +161,7 @@ export default function DashboardPage() {
           </div>
           {mode === 'group' && (
             <Link to="/group-session" style={groupLinkStyle}>
-              Join Session →
+              Join Session â†’
             </Link>
           )}
         </div>
@@ -172,7 +172,7 @@ export default function DashboardPage() {
         {dashboard?.skills.map((skill) => (
           <div key={skill.skill} style={skillCardStyle}>
             <div style={skillCardHeaderStyle}>
-              <span style={{ fontSize: '1.5rem' }}>{SKILL_ICONS[skill.skill] || '📚'}</span>
+              <span style={{ fontSize: '1.5rem' }}>{SKILL_ICONS[skill.skill] || 'ðŸ“š'}</span>
               <h3 style={{ margin: 0, fontSize: '1.1rem' }}>
                 {SKILL_LABELS[skill.skill] || skill.skill}
               </h3>
@@ -192,7 +192,7 @@ export default function DashboardPage() {
               />
             </div>
             <p style={progressTextStyle}>
-              {skill.completedLessons}/{skill.totalLessons} lessons · {skill.percentComplete}%
+              {skill.completedLessons}/{skill.totalLessons} lessons Â· {skill.percentComplete}%
             </p>
           </div>
         ))}
@@ -202,29 +202,29 @@ export default function DashboardPage() {
       <div style={quickActionsStyle}>
         <h2 style={{ fontSize: '1.1rem', marginBottom: '1rem' }}>Quick Actions</h2>
         <div style={actionsGrid}>
-          <Link to="/assessment" style={actionCard}>
-            <span style={{ fontSize: '1.5rem' }}>🎯</span>
+          <Link to="/chapters" style={actionCard}><span style={{ fontSize: '1.5rem' }}>📚</span><div><strong style={{ display: 'block', color: '#1c1917' }}>Chapters</strong><span style={{ fontSize: '0.8rem', color: '#78716c' }}>Browse chapter-based lessons</span></div></Link><Link to="/sproochentest" style={actionCard}><span style={{ fontSize: '1.5rem' }}>🎓</span><div><strong style={{ display: 'block', color: '#1c1917' }}>Sproochentest Prep</strong><span style={{ fontSize: '0.8rem', color: '#78716c' }}>Citizenship exam practice</span></div></Link><Link to="/speaking/peer" style={actionCard}><span style={{ fontSize: '1.5rem' }}>🗣️</span><div><strong style={{ display: 'block', color: '#1c1917' }}>Peer Practice</strong><span style={{ fontSize: '0.8rem', color: '#78716c' }}>Find a speaking partner</span></div></Link><Link to="/leaderboard" style={actionCard}><span style={{ fontSize: '1.5rem' }}>🏆</span><div><strong style={{ display: 'block', color: '#1c1917' }}>Leaderboard</strong><span style={{ fontSize: '0.8rem', color: '#78716c' }}>See top learners</span></div></Link><Link to="/path-selection" style={actionCard}><span style={{ fontSize: '1.5rem' }}>🛤️</span><div><strong style={{ display: 'block', color: '#1c1917' }}>Learning Path</strong><span style={{ fontSize: '0.8rem', color: '#78716c' }}>Sproochentest or Daily Life</span></div></Link><Link to="/assessment" style={actionCard}>
+            <span style={{ fontSize: '1.5rem' }}>ðŸŽ¯</span>
             <div>
               <strong style={{ display: 'block', color: '#1c1917' }}>Take Assessment</strong>
               <span style={{ fontSize: '0.8rem', color: '#78716c' }}>Test your Luxembourgish level</span>
             </div>
           </Link>
           <Link to="/self-select-level" style={actionCard}>
-            <span style={{ fontSize: '1.5rem' }}>📊</span>
+            <span style={{ fontSize: '1.5rem' }}>ðŸ“Š</span>
             <div>
               <strong style={{ display: 'block', color: '#1c1917' }}>Set Your Level</strong>
-              <span style={{ fontSize: '0.8rem', color: '#78716c' }}>Self-select A1–C2</span>
+              <span style={{ fontSize: '0.8rem', color: '#78716c' }}>Self-select A1â€“C2</span>
             </div>
           </Link>
           <Link to="/group-session" style={actionCard}>
-            <span style={{ fontSize: '1.5rem' }}>👥</span>
+            <span style={{ fontSize: '1.5rem' }}>ðŸ‘¥</span>
             <div>
               <strong style={{ display: 'block', color: '#1c1917' }}>Group Session</strong>
               <span style={{ fontSize: '0.8rem', color: '#78716c' }}>Learn with others live</span>
             </div>
           </Link>
           <Link to="/profile" style={actionCard}>
-            <span style={{ fontSize: '1.5rem' }}>⚙️</span>
+            <span style={{ fontSize: '1.5rem' }}>âš™ï¸</span>
             <div>
               <strong style={{ display: 'block', color: '#1c1917' }}>Profile & Settings</strong>
               <span style={{ fontSize: '0.8rem', color: '#78716c' }}>Switch language, retake test</span>
@@ -485,3 +485,4 @@ const actionCard: React.CSSProperties = {
   textDecoration: 'none',
   transition: 'border-color 0.15s, box-shadow 0.15s',
 };
+
