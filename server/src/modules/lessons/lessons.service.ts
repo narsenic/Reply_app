@@ -55,19 +55,7 @@ export async function getLessonDetail(lessonId: string, userId: string) {
     throw new AppError(404, 'LESSON_NOT_FOUND', `Lesson not found: ${lessonId}`);
   }
 
-  // Check user's proficiency level matches the lesson's level
-  const userLevel = await getUserSkillLevel(
-    userId,
-    lesson.curriculum.skill as SkillComponent,
-  );
-
-  if (userLevel && userLevel !== lesson.curriculum.level) {
-    throw new AppError(
-      403,
-      'LEVEL_MISMATCH',
-      `This lesson is for level ${lesson.curriculum.level}, but your proficiency level is ${userLevel}`,
-    );
-  }
+  // No level restriction — all lessons are accessible regardless of proficiency
 
   return {
     id: lesson.id,
