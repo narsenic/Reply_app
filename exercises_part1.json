@@ -1,0 +1,72 @@
+﻿{
+  "0": {
+    "grammar": {
+      "title": "Nationality Grammar Rules",
+      "ex": [
+        {"t":"multiple-choice","p":"How do you say 'I come from France'?","o":["Ech kommen aus Frankräich","Ech wunnen a Frankräich","Ech sinn Frankräich","Ech ginn op Frankräich"],"c":"Ech kommen aus Frankräich","e":"Use kommen aus + country. Ech kommen aus Frankräich."},
+        {"t":"multiple-choice","p":"What is the feminine form of 'I am Luxembourgish'?","o":["Ech si Lëtzebuergerin","Ech si Lëtzebuerger","Ech si Lëtzebuergesch","Ech si Lëtzebuerg"],"c":"Ech si Lëtzebuergerin","e":"Feminine nationality adds -in: Lëtzebuergerin."},
+        {"t":"fill-blank","p":"Complete: Ech wunnen ___ Lëtzebuerg. (I live in Luxembourg.)","o":null,"c":"zu","e":"Exception: use zu (not an) for Luxembourg."},
+        {"t":"multiple-choice","p":"How do you form language names in Luxembourgish?","o":["Add -(e)sch","Add -er","Add -in","Add -ung"],"c":"Add -(e)sch","e":"Languages use -(e)sch: Lëtzebuergesch, Englesch, Franséisch."}
+      ]
+    },
+    "reading": {
+      "title": "Introducing Yourself - Reading",
+      "ex": [
+        {"t":"multiple-choice","p":"What preposition is used with kommen for countries?","o":["aus","zu","an","op"],"c":"aus","e":"Ech kommen aus + country. Exception: vu Lëtzebuerg."},
+        {"t":"multiple-choice","p":"What does 'Ech si Lëtzebuergesch Proff' mean?","o":["I am a Luxembourgish teacher","I am Luxembourgish","I speak Luxembourgish","I study Luxembourgish"],"c":"I am a Luxembourgish teacher","e":"Proff = teacher. No article before professions in Luxembourgish."},
+        {"t":"fill-blank","p":"Complete: Ech kommen aus England ___ London.","o":null,"c":"vu","e":"Use vu(n) for cities: Ech kommen aus England vu London."}
+      ]
+    },
+    "listening": {
+      "title": "Nationalities Listening",
+      "ex": [
+        {"t":"multiple-choice","p":"What is the conjugation of kommen with du?","o":["du kënns","du komms","du kommen","du kënnt"],"c":"du kënns","e":"Kommen is irregular: ech kommen, du kënns, hien kënnt."},
+        {"t":"multiple-choice","p":"What is the past participle of schwätzen?","o":["geschwat","geschwätzt","schwätzt","geschwätzen"],"c":"geschwat","e":"Schwätzen participle is geschwat."},
+        {"t":"multiple-choice","p":"How do you say 'I am Italian' (woman)?","o":["Ech sinn Italienerin","Ech sinn Italiener","Ech sinn Italienesch","Ech sinn Italien"],"c":"Ech sinn Italienerin","e":"Feminine: add -in. Italiener -> Italienerin."}
+      ]
+    },
+    "speaking": {
+      "title": "Introduce Yourself Speaking",
+      "ex": [
+        {"t":"multiple-choice","p":"How do you say 'My name is Anne'?","o":["Mäin Numm ass Anne","Ech heeschen Anne","Ech sinn Anne","Ech kommen Anne"],"c":"Mäin Numm ass Anne","e":"Mäin Numm ass... = My name is... (formal)."},
+        {"t":"fill-blank","p":"Complete: Ech schwätze ___. (I speak Luxembourgish.)","o":null,"c":"Lëtzebuergesch","e":"Lëtzebuergesch is the language name."},
+        {"t":"multiple-choice","p":"What does 'an zwar' mean?","o":["more precisely","and also","but rather","of course"],"c":"more precisely","e":"An zwar = more precisely / to be exact."}
+      ]
+    }
+  },
+  "1": {
+    "grammar": {
+      "title": "Likes and Dislikes Grammar",
+      "ex": [
+        {"t":"multiple-choice","p":"How do you say 'I like red wine' using gefalen?","o":["De roude Wäi gefält mir","Ech gefalen de roude Wäi","Ech hunn de roude Wäi","Mir gefält net"],"c":"De roude Wäi gefält mir","e":"Gefalen = to please: De roude Wäi gefält mir."},
+        {"t":"multiple-choice","p":"What does 'Ech hunn gär Schokolaad' mean?","o":["I like chocolate","I have chocolate","I eat chocolate","I want chocolate"],"c":"I like chocolate","e":"Hunn gär + noun = to like. Ech hunn gär Schokolaad."},
+        {"t":"fill-blank","p":"Complete: Mir ___ de Kaffi net. (I don't like the coffee.)","o":null,"c":"gefält","e":"Mir gefält... net = I don't like..."},
+        {"t":"multiple-choice","p":"How do you ask 'Did you like the food?'","o":["Huet iech d'Iessen geschmaacht?","Gefält dir d'Iessen?","Hues du gär d'Iessen?","Wëlls du d'Iessen?"],"c":"Huet iech d'Iessen geschmaacht?","e":"Schmäichten for food: Huet iech d'Iessen geschmaacht?"}
+      ]
+    },
+    "reading": {
+      "title": "Preferences Reading",
+      "ex": [
+        {"t":"multiple-choice","p":"What does 'Mäi Lieblingsessen' mean?","o":["My favourite food","My lunch","My cooking","My recipe"],"c":"My favourite food","e":"Lieblings- = favourite, Essen = food."},
+        {"t":"multiple-choice","p":"How do you say 'I don't like football at all'?","o":["Fussball gefält mir guer net","Ech hunn net gär Fussball","Ech spillen net Fussball","Fussball ass net gutt"],"c":"Fussball gefält mir guer net","e":"Guer net = not at all."},
+        {"t":"fill-blank","p":"Complete: Ech hunn ___ gär Musek. (I also like music.)","o":null,"c":"och","e":"Och = also/too."}
+      ]
+    },
+    "listening": {
+      "title": "What Do You Like? Listening",
+      "ex": [
+        {"t":"multiple-choice","p":"What does 'besonnesch' mean?","o":["especially","beautiful","boring","basic"],"c":"especially","e":"Besonnesch = especially."},
+        {"t":"multiple-choice","p":"What is 'Judd mat Gaardebounen'?","o":["Smoked pork with broad beans","Beef stew","Fish soup","Potato salad"],"c":"Smoked pork with broad beans","e":"Traditional Luxembourgish dish."},
+        {"t":"fill-blank","p":"Complete: Ech spillen Klavier ___ 10 Joer.","o":null,"c":"zanter","e":"Zanter = since/for (duration)."}
+      ]
+    },
+    "speaking": {
+      "title": "Express Preferences Speaking",
+      "ex": [
+        {"t":"multiple-choice","p":"How do you ask 'What do you like?' (informal)?","o":["Wat hues du gär?","Wat gefält dir?","Wat wëlls du?","Wat méchs du gär?"],"c":"Wat hues du gär?","e":"Wat hues du gär? = What do you like?"},
+        {"t":"fill-blank","p":"Complete: Ech hunn net gär fréi ___. (I don't like getting up early.)","o":null,"c":"opstoen","e":"Opstoen = to get up."},
+        {"t":"multiple-choice","p":"What does 'Kachen' mean?","o":["Cooking","Coughing","Catching","Calling"],"c":"Cooking","e":"Kachen = cooking/to cook."}
+      ]
+    }
+  }
+}
