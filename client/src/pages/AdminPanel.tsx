@@ -534,7 +534,7 @@ function ChaptersTab() {
             </tr>
           </thead>
           <tbody>
-            {chapters.map((ch, idx) => (
+            {chapters.map((ch) => (
               <tr key={ch.id}>
                 <td style={tdStyle}>{ch.orderIndex}</td>
                 <td style={tdStyle}>{ch.title}<br /><span style={{ fontSize: '0.78rem', color: '#888' }}>{ch.description}</span></td>
