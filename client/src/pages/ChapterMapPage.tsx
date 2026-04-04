@@ -31,7 +31,7 @@ export default function ChapterMapPage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await apiClient.get<ChapterListResponse>('/api/chapters', { params: { level: 'A1', path: 'sproochentest' } });
+      const res = await apiClient.get<ChapterListResponse>('/api/chapters', { params: { level: 'A1', path: 'daily_life' } });
       setChapters(res.data.chapters);
     } catch { setError('Failed to load chapters.'); }
     finally { setLoading(false); }
