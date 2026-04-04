@@ -18,11 +18,11 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="page">
+    <div style={{ minHeight: '100vh', background: '#fafafa', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1.5rem' }}>
       <div style={card}>
         <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
           <div style={logo}>💬</div>
-          <h1 style={{ fontFamily: "'Space Grotesk', sans-serif", marginTop: '0.75rem', fontSize: '1.4rem' }}>Create your account</h1>
+          <h1 style={{ fontFamily: "'Space Grotesk', sans-serif", marginTop: '0.75rem', fontSize: '1.4rem', color: '#1a1a1a' }}>Create your account</h1>
           <p style={{ color: '#999', fontSize: '0.88rem' }}>Start learning Luxembourgish today</p>
         </div>
         {error && <div className="error-display"><p>{error}</p></div>}
@@ -38,7 +38,7 @@ export default function RegisterPage() {
   );
 }
 
-const card: React.CSSProperties = { background: '#fff', borderRadius: 16, padding: '2rem', border: '1px solid #eee', maxWidth: 400, margin: '3rem auto', boxShadow: '0 2px 16px rgba(0,0,0,0.04)' };
+const card: React.CSSProperties = { background: '#fff', borderRadius: 16, padding: '2rem', border: '1px solid #eee', maxWidth: 400, width: '100%', boxShadow: '0 2px 16px rgba(0,0,0,0.04)' };
 const logo: React.CSSProperties = { width: 48, height: 48, borderRadius: 14, background: '#6C5CE7', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' };
 const lbl: React.CSSProperties = { display: 'flex', flexDirection: 'column', gap: '0.3rem', marginBottom: '1rem', fontSize: '0.88rem', color: '#666', fontWeight: 600 };
 const inp: React.CSSProperties = { padding: '0.6rem 0.75rem', borderRadius: 10, border: '1.5px solid #eee', fontSize: '0.95rem' };

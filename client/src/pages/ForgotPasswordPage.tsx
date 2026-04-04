@@ -19,17 +19,27 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="page">
-      <div style={cardStyle}>
-        <h1 style={{ marginBottom: '1rem', textAlign: 'center' }}>Forgot Password</h1>
+    <div style={{ minHeight: '100vh', background: '#fafafa', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1.5rem' }}>
+      <div style={card}>
+        <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+          <div style={logo}>💬</div>
+          <h1 style={{ fontFamily: "'Space Grotesk', sans-serif", marginTop: '0.75rem', fontSize: '1.4rem', color: '#1a1a1a' }}>Forgot password?</h1>
+          <p style={{ color: '#999', fontSize: '0.88rem' }}>We'll send you a reset link</p>
+        </div>
         {sent ? (
-          <><p style={{ textAlign: 'center', color: '#555' }}>If an account with that email exists, a reset link has been sent.</p><Link to="/login" style={{ ...btnStyle, display: 'block', textAlign: 'center', textDecoration: 'none', marginTop: '1.5rem' }}>Back to Login</Link></>
+          <>
+            <div style={{ textAlign: 'center', padding: '1rem 0' }}>
+              <div style={{ fontSize: '2rem', marginBottom: '0.75rem' }}>✉️</div>
+              <p style={{ color: '#555', fontSize: '0.9rem', lineHeight: 1.6 }}>If an account with that email exists, a reset link has been sent.</p>
+            </div>
+            <Link to="/login" style={{ ...btn, display: 'block', textAlign: 'center', textDecoration: 'none', marginTop: '1rem' }}>Back to Login</Link>
+          </>
         ) : (
           <form onSubmit={handleSubmit}>
             {error && <div className="error-display"><p>{error}</p></div>}
-            <label style={labelStyle}>Email<input type="email" value={email} onChange={e => setEmail(e.target.value)} required style={inputStyle} /></label>
-            <button type="submit" disabled={loading} style={btnStyle}>{loading ? 'Sending...' : 'Send Reset Link'}</button>
-            <p style={{ textAlign: 'center', marginTop: '1rem', fontSize: '0.85rem' }}><Link to="/login" style={linkStyle}>Back to Login</Link></p>
+            <label style={lbl}>Email<input type="email" value={email} onChange={e => setEmail(e.target.value)} required placeholder="you@example.com" style={inp} /></label>
+            <button type="submit" disabled={loading} style={btn}>{loading ? 'Sending...' : 'Send Reset Link'}</button>
+            <p style={{ textAlign: 'center', marginTop: '1.25rem', fontSize: '0.85rem', color: '#999' }}><Link to="/login" style={lnk}>← Back to Login</Link></p>
           </form>
         )}
       </div>
@@ -37,8 +47,9 @@ export default function ForgotPasswordPage() {
   );
 }
 
-const cardStyle: React.CSSProperties = { background: '#fff', borderRadius: '8px', padding: '2rem', border: '1px solid #e5e7eb', maxWidth: '400px', margin: '2rem auto' };
-const labelStyle: React.CSSProperties = { display: 'flex', flexDirection: 'column', gap: '0.25rem', marginBottom: '1rem', fontSize: '0.9rem', color: '#555', fontWeight: 500 };
-const inputStyle: React.CSSProperties = { padding: '0.6rem', borderRadius: '6px', border: '1px solid #d1d5db', fontSize: '1rem' };
-const btnStyle: React.CSSProperties = { width: '100%', padding: '0.7rem', background: '#2563eb', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '1rem', fontWeight: 500 };
-const linkStyle: React.CSSProperties = { color: '#2563eb', textDecoration: 'none' };
+const card: React.CSSProperties = { background: '#fff', borderRadius: 16, padding: '2rem', border: '1px solid #eee', maxWidth: 400, width: '100%', boxShadow: '0 2px 16px rgba(0,0,0,0.04)' };
+const logo: React.CSSProperties = { width: 48, height: 48, borderRadius: 14, background: '#6C5CE7', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' };
+const lbl: React.CSSProperties = { display: 'flex', flexDirection: 'column', gap: '0.3rem', marginBottom: '1rem', fontSize: '0.88rem', color: '#666', fontWeight: 600 };
+const inp: React.CSSProperties = { padding: '0.6rem 0.75rem', borderRadius: 10, border: '1.5px solid #eee', fontSize: '0.95rem' };
+const btn: React.CSSProperties = { width: '100%', padding: '0.7rem', background: '#6C5CE7', color: '#fff', border: 'none', borderRadius: 12, cursor: 'pointer', fontSize: '0.95rem', fontWeight: 700, marginTop: '0.5rem' };
+const lnk: React.CSSProperties = { color: '#6C5CE7', textDecoration: 'none', fontWeight: 600 };
