@@ -273,6 +273,29 @@ async function seedChaptersOnStartup() {
       }
     }
 
+    // Also seed Sproochentest chapters if none exist
+    const sproochentestCount = await prisma.chapter.count({ where: { learningPath: 'sproochentest' } });
+    if (sproochentestCount === 0) {
+      const sproochentestChapters = [
+        // A2 Sproochentest
+        { title: 'Heieren - Listening', description: 'Listening comprehension practice for the Sproochentest exam', level: 'A2', orderIndex: 0 },
+        { title: 'Schwetzen - Speaking', description: 'Oral production: describe pictures, answer questions, present topics', level: 'A2', orderIndex: 1 },
+        { title: 'Liesen - Reading', description: 'Reading comprehension with exam-style texts and questions', level: 'A2', orderIndex: 2 },
+        { title: 'Schreiwen - Writing', description: 'Writing practice: fill forms, short messages, simple texts', level: 'A2', orderIndex: 3 },
+        { title: 'Mock Examen A2', description: 'Full mock exam simulating the real Sproochentest A2 format', level: 'A2', orderIndex: 4 },
+        // B1 Sproochentest
+        { title: 'Heieren B1', description: 'Advanced listening: longer dialogues, news excerpts, interviews', level: 'B1', orderIndex: 0 },
+        { title: 'Schwetzen B1', description: 'Advanced speaking: present arguments, discuss topics, role-play', level: 'B1', orderIndex: 1 },
+        { title: 'Liesen B1', description: 'Advanced reading: articles, letters, official documents', level: 'B1', orderIndex: 2 },
+        { title: 'Schreiwen B1', description: 'Advanced writing: formal letters, essays, opinion pieces', level: 'B1', orderIndex: 3 },
+        { title: 'Mock Examen B1', description: 'Full mock exam simulating the real Sproochentest B1 format', level: 'B1', orderIndex: 4 },
+      ];
+      for (const ch of sproochentestChapters) {
+        await prisma.chapter.create({ data: { ...ch, learningPath: 'sproochentest', published: true } });
+      }
+      console.log('Seeded 10 Sproochentest chapters (A2 + B1)');
+    }
+
     console.log('Chapter lesson seeding complete');
   } catch (err) {
     console.error('Chapter seed error:', err);
