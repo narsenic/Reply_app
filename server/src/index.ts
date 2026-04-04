@@ -115,8 +115,53 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   return res.status(500).json(body);
 });
 
+
+// Seed chapters on startup if none exist
+async function seedChaptersOnStartup() {
+  try {
+    const { prisma } = await import('./lib/prisma');
+    
+    // Ensure default language
+    await prisma.language.upsert({ where: { code: 'lb' }, update: {}, create: { code: 'lb', name: 'Luxembourgish', isDefault: true } });
+    
+    // Check if chapters already exist
+    const count = await prisma.chapter.count();
+    if (count > 0) { console.log('Chapters already seeded:', count); return; }
+    
+    const chapters = [
+      { title: 'Nationality', description: 'Introducing yourself, nationalities, languages', level: 'A1', orderIndex: 0 },
+      { title: 'Gefalen - Likes', description: 'Expressing preferences and what you enjoy', level: 'A1', orderIndex: 1 },
+      { title: 'Weidoen - Health', description: 'Body parts, pain, health vocabulary', level: 'A1', orderIndex: 2 },
+      { title: 'Apdikt - Pharmacy', description: 'At the pharmacy, buying medicine', level: 'A1', orderIndex: 3 },
+      { title: 'An der Stad', description: 'In the city, directions, places', level: 'A1', orderIndex: 4 },
+      { title: 'Prepo - Prepositions', description: 'Spatial relationships and prepositions', level: 'A1', orderIndex: 5 },
+      { title: 'An der Stad 2', description: 'More city vocabulary and navigation', level: 'A1', orderIndex: 6 },
+      { title: 'Mai Program', description: 'Daily routine, schedule, time', level: 'A1', orderIndex: 7 },
+      { title: 'Haus - House', description: 'Rooms, furniture, home vocabulary', level: 'A1', orderIndex: 8 },
+      { title: 'Review', description: 'Revision of chapters 1-9', level: 'A1', orderIndex: 9 },
+      { title: 'Perfect hunn', description: 'Past tense with hunn (to have)', level: 'A2', orderIndex: 0 },
+      { title: 'Perfect sinn', description: 'Past tense with sinn (to be)', level: 'A2', orderIndex: 1 },
+      { title: 'Vakanz - Vacation', description: 'Travel, holidays, vacation vocabulary', level: 'A2', orderIndex: 2 },
+      { title: 'Imperfect', description: 'Imperfect tense for past events', level: 'A2', orderIndex: 3 },
+      { title: 'Kleeder - Clothes', description: 'Clothing vocabulary and shopping', level: 'A2', orderIndex: 4 },
+      { title: 'Comparison', description: 'Comparing things', level: 'A2', orderIndex: 5 },
+      { title: 'Well - Because', description: 'Giving reasons, conjunctions', level: 'A2', orderIndex: 6 },
+      { title: 'Wellen - To want', description: 'Modal verbs and expressing desires', level: 'A2', orderIndex: 7 },
+      { title: 'Reflexive Verbs 1', description: 'Introduction to reflexive verbs', level: 'A2', orderIndex: 8 },
+      { title: 'Reflexive Verbs 2', description: 'Advanced reflexive verb patterns', level: 'A2', orderIndex: 9 },
+    ];
+    
+    for (const ch of chapters) {
+      await prisma.chapter.create({ data: { ...ch, learningPath: 'daily_life', published: true } });
+    }
+    console.log('Seeded 20 chapters successfully');
+  } catch (err) {
+    console.error('Chapter seed error:', err);
+  }
+}
 httpServer.listen(Number(PORT), '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
+  seedChaptersOnStartup();
 });
 
 export { app, httpServer, io };

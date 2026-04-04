@@ -271,42 +271,45 @@ async function seedSpeakingLessons(curriculumId: string) {
     },
   });
 }
-
-
-// Seed 20 chapters for daily_life learning path at A1/A2 level
 async function seedChapters() {
-  const chapters = [
-    { title: 'Nationality', desc: 'Introducing yourself, nationalities, languages', level: 'A1', order: 0 },
-    { title: 'Gefalen - Likes', desc: 'Expressing preferences and what you enjoy', level: 'A1', order: 1 },
-    { title: 'Weidoen - Health', desc: 'Body parts, pain, health vocabulary', level: 'A1', order: 2 },
-    { title: 'Apdikt - Pharmacy', desc: 'At the pharmacy, buying medicine', level: 'A1', order: 3 },
-    { title: 'An der Stad', desc: 'In the city, directions, places', level: 'A1', order: 4 },
-    { title: 'Prepo - Prepositions', desc: 'Spatial relationships and prepositions', level: 'A1', order: 5 },
-    { title: 'An der Stad 2', desc: 'More city vocabulary and navigation', level: 'A1', order: 6 },
-    { title: 'Mai Program', desc: 'Daily routine, schedule, time', level: 'A1', order: 7 },
-    { title: 'Haus - House', desc: 'Rooms, furniture, home vocabulary', level: 'A1', order: 8 },
-    { title: 'Review', desc: 'Revision of chapters 1-9', level: 'A1', order: 9 },
-    { title: 'Perfect hunn', desc: 'Past tense with hunn (to have)', level: 'A2', order: 0 },
-    { title: 'Perfect sinn', desc: 'Past tense with sinn (to be)', level: 'A2', order: 1 },
-    { title: 'Vakanz - Vacation', desc: 'Travel, holidays, vacation vocabulary', level: 'A2', order: 2 },
-    { title: 'Imperfect', desc: 'Imperfect tense for past events', level: 'A2', order: 3 },
-    { title: 'Kleeder - Clothes', desc: 'Clothing vocabulary and shopping', level: 'A2', order: 4 },
-    { title: 'Comparison', desc: 'Comparing things with mei, am meeschten', level: 'A2', order: 5 },
-    { title: 'Well - Because', desc: 'Giving reasons, conjunctions', level: 'A2', order: 6 },
-    { title: 'Wellen - To want', desc: 'Modal verbs and expressing desires', level: 'A2', order: 7 },
-    { title: 'Reflexive Verbs 1', desc: 'Introduction to reflexive verbs', level: 'A2', order: 8 },
-    { title: 'Reflexive Verbs 2', desc: 'Advanced reflexive verb patterns', level: 'A2', order: 9 },
+  const chData = [
+    {t:'Nationality',d:'Introducing yourself, nationalities',l:'A1',o:0},
+    {t:'Gefalen',d:'Expressing likes and preferences',l:'A1',o:1},
+    {t:'Weidoen',d:'Health and body vocabulary',l:'A1',o:2},
+    {t:'Apdikt',d:'At the pharmacy',l:'A1',o:3},
+    {t:'An der Stad',d:'In the city, directions',l:'A1',o:4},
+    {t:'Prepo',d:'Prepositions',l:'A1',o:5},
+    {t:'An der Stad 2',d:'More city vocabulary',l:'A1',o:6},
+    {t:'Mai Program',d:'Daily routine and schedule',l:'A1',o:7},
+    {t:'Haus',d:'House and home vocabulary',l:'A1',o:8},
+    {t:'Review',d:'Revision of chapters 1-9',l:'A1',o:9},
+    {t:'Perfect hunn',d:'Past tense with hunn',l:'A2',o:0},
+    {t:'Perfect sinn',d:'Past tense with sinn',l:'A2',o:1},
+    {t:'Vakanz',d:'Vacation and travel',l:'A2',o:2},
+    {t:'Imperfect',d:'Imperfect tense',l:'A2',o:3},
+    {t:'Kleeder',d:'Clothing vocabulary',l:'A2',o:4},
+    {t:'Comparison',d:'Comparing things',l:'A2',o:5},
+    {t:'Well',d:'Giving reasons',l:'A2',o:6},
+    {t:'Wellen',d:'Modal verbs',l:'A2',o:7},
+    {t:'Reflexive 1',d:'Reflexive verbs intro',l:'A2',o:8},
+    {t:'Reflexive 2',d:'Advanced reflexive verbs',l:'A2',o:9},
   ];
-  for (const ch of chapters) {
-    const existing = await prisma.chapter.findFirst({ where: { title: ch.title, level: ch.level } });
-    if (!existing) {
-      await prisma.chapter.create({
-        data: { title: ch.title, description: ch.desc, level: ch.level, learningPath: 'daily_life', orderIndex: ch.order, published: true },
-      });
-    }
+  for (const c of chData) {
+    await prisma.chapter.upsert({
+      where: { level_learningPath_orderIndex: { level: c.l, learningPath: 'daily_life', orderIndex: c.o } },
+      update: {},
+      create: { title: c.t, description: c.d, level: c.l, learningPath: 'daily_life', orderIndex: c.o, published: true },
+    });
   }
-  console.log('Seed: 20 chapters created.');
+  console.log('Seeded 20 chapters.');
 }
+
+async function main() {
+  await prisma.language.upsert({ where: { code: 'lb' }, update: {}, create: { code: 'lb', name: 'Luxembourgish', isDefault: true } });
+  await seedChapters();
+  console.log('Seed complete.');
+}
+
 main()
   .catch((e) => { console.error(e); process.exit(1); })
   .finally(async () => { await prisma.$disconnect(); });
