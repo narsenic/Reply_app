@@ -4,48 +4,50 @@ interface ReplyLogoProps {
   light?: boolean;
 }
 
-const TEAL = '#0D9488';
-const ORANGE = '#F97316';
+const BLUE = '#1B3FBF';
 
 /**
- * Reply logo — two abstract figures forming an "R".
- * Teal figure (left) + orange figure (right) overlapping.
- * Matches the brand image: two rounded people shapes creating the R letterform.
+ * Reply logo — bold blue wordmark.
+ * Oversized "R" with a speech bubble cutout in its counter space.
+ * "EPLY" follows in smaller uppercase.
  */
-export default function ReplyLogo({ size = 40, showText = false, light = false }: ReplyLogoProps) {
-  const textColor = light ? '#fff' : TEAL;
+export default function ReplyLogo({ size = 32, showText = true, light = false }: ReplyLogoProps) {
+  const color = light ? '#fff' : BLUE;
+  const rHeight = size;
+  const eplySize = size * 0.58;
 
   return (
-    <div style={{ display: 'inline-flex', flexDirection: showText ? 'column' : 'row', alignItems: 'center', gap: showText ? size * 0.15 : size * 0.25 }}>
-      <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        {/* Teal figure — left person (forms R stem + arm) */}
-        <circle cx="35" cy="14" r="14" fill={TEAL} />
-        <path d="M21 32 L21 96 Q21 100 25 100 L35 100 Q39 100 39 96 L39 58 Q39 46 50 42 L54 41 Q46 50 39 58" fill={TEAL} />
-        <rect x="21" y="30" width="18" height="70" rx="9" fill={TEAL} />
-        {/* Teal arm curving right */}
-        <path d="M39 30 C39 30 39 44 52 48 L52 48 Q39 52 39 52 L39 30Z" fill={TEAL} />
-
-        {/* Orange figure — right person (forms R bowl) */}
-        <circle cx="62" cy="16" r="13" fill={ORANGE} />
-        <path d="M52 34 Q52 30 60 30 Q78 30 78 48 Q78 66 60 66 L50 66 Q48 66 46 62 L52 34Z" fill={ORANGE} />
-        {/* Orange leg kicking down-right */}
-        <path d="M50 62 Q48 66 44 78 L36 96 Q34 100 38 100 L48 100 Q52 100 54 96 L64 72 Q66 68 62 66 L50 66 L50 62Z" fill={ORANGE} />
+    <div style={{ display: 'inline-flex', alignItems: 'flex-end', gap: 0, lineHeight: 1, userSelect: 'none' }}>
+      {/* Big R with speech bubble cutout */}
+      <svg width={rHeight * 0.82} height={rHeight} viewBox="0 0 82 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        {/* R body */}
+        <path
+          d="M0 100V0h42c7.5 0 14 1.4 19.5 4.2 5.5 2.8 9.8 6.8 12.8 12 3 5.2 4.5 11.2 4.5 18 0 6.8-1.5 12.8-4.5 18-3 5.2-7.3 9.2-12.8 12C56 67 49.5 68.4 42 68.4H18V100H0zM18 52h22c5.5 0 9.8-1.6 13-4.8 3.2-3.2 4.8-7.6 4.8-13.2 0-5.6-1.6-10-4.8-13.2C49.8 17.6 45.5 16 40 16H18v36z"
+          fill={color}
+        />
+        {/* Speech bubble cutout in the R's counter */}
+        <ellipse cx="40" cy="34" rx="12" ry="10" fill={light ? BLUE : '#fff'} />
+        {/* Bubble tail */}
+        <polygon points="32,42 28,50 38,43" fill={light ? BLUE : '#fff'} />
       </svg>
 
-      {showText && (
+      {/* EPLY text */}
+      {showText !== false && (
         <span style={{
-          fontFamily: "SF Pro Display, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif",
-          fontWeight: 700,
-          fontSize: size * 0.42,
-          color: textColor,
-          letterSpacing: '-0.02em',
+          fontFamily: "SF Pro Display, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif",
+          fontWeight: 800,
+          fontSize: eplySize,
+          color,
+          letterSpacing: '0.02em',
           lineHeight: 1,
+          textTransform: 'uppercase',
+          marginBottom: size * 0.01,
         }}>
-          Reply
+          EPLY
         </span>
       )}
     </div>
   );
 }
 
-export { TEAL, ORANGE };
+export { BLUE };
