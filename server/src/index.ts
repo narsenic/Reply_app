@@ -159,42 +159,118 @@ async function seedChaptersOnStartup() {
     const allChapters = await prisma.chapter.findMany({ orderBy: [{ level: 'asc' }, { orderIndex: 'asc' }] });
     const skills = ['grammar', 'reading', 'listening', 'speaking'] as const;
 
+    let chaptersNeedingLessons = 0;
     for (const chapter of allChapters) {
       const linkCount = await prisma.chapterLesson.count({ where: { chapterId: chapter.id } });
-      if (linkCount > 0) continue; // already has lessons
-
-      for (let si = 0; si < skills.length; si++) {
-        const skill = skills[si];
-        // Ensure curriculum exists
-        const currKey = { languageCode: 'lb', level: chapter.level, skill };
-        let curriculum = await prisma.curriculum.findUnique({ where: { languageCode_level_skill: currKey } });
-        if (!curriculum) {
-          curriculum = await prisma.curriculum.create({ data: { ...currKey, title: `${chapter.level} ${skill}` } });
+      if (linkCount === 0) {
+        chaptersNeedingLessons++;
+      } else {
+        // Check if existing lessons are placeholders (have "Option A" as correct answer)
+        const links = await prisma.chapterLesson.findMany({ where: { chapterId: chapter.id }, include: { lesson: { include: { exercises: true } } } });
+        const isPlaceholder = links.some(l => l.lesson.exercises.some(e => e.correctAnswer === 'Option A'));
+        if (isPlaceholder) {
+          // Delete placeholder lessons and their links
+          for (const link of links) {
+            await prisma.exercise.deleteMany({ where: { lessonId: link.lessonId } });
+            await prisma.contentBlock.deleteMany({ where: { lessonId: link.lessonId } });
+            await prisma.userProgress.deleteMany({ where: { lessonId: link.lessonId } });
+          }
+          await prisma.chapterLesson.deleteMany({ where: { chapterId: chapter.id } });
+          for (const link of links) {
+            await prisma.lesson.delete({ where: { id: link.lessonId } }).catch(() => {});
+          }
+          chaptersNeedingLessons++;
+          console.log(`Removed placeholder lessons for: ${chapter.title}`);
         }
-
-        const lesson = await prisma.lesson.create({
-          data: {
-            curriculumId: curriculum.id,
-            title: `${chapter.title} - ${skill.charAt(0).toUpperCase() + skill.slice(1)}`,
-            orderIndex: si,
-            content: {
-              create: [
-                { type: 'text', body: `${skill.charAt(0).toUpperCase() + skill.slice(1)} lesson for "${chapter.title}". ${chapter.description}.`, orderIndex: 0 },
-              ],
-            },
-            exercises: {
-              create: [
-                { type: skill === 'grammar' ? 'fill-blank' : 'multiple-choice', prompt: `Practice ${skill} for ${chapter.title}`, options: ['Option A', 'Option B', 'Option C'], correctAnswer: 'Option A', explanation: `This is a ${skill} exercise for ${chapter.title}.`, orderIndex: 0 },
-              ],
-            },
-          },
-        });
-
-        await prisma.chapterLesson.create({
-          data: { chapterId: chapter.id, lessonId: lesson.id, skill, orderIndex: si },
-        });
       }
-      console.log(`Created lessons for chapter: ${chapter.title}`);
+    }
+
+    if (chaptersNeedingLessons > 0) {
+      console.log(`${chaptersNeedingLessons} chapters need lessons — creating from built-in content...`);
+      
+      // Chapter content definitions with real Luxembourgish material
+      const chapterContent: Record<number, Record<string, { title: string; content: string; exercises: Array<{ type: string; prompt: string; options: string[] | null; correctAnswer: string; explanation: string }> }>> = {
+        0: { // Nationaliteit
+          grammar: {
+            title: 'Nationality Grammar',
+            content: '<h3>Ech sinn... -- I am...</h3><p>To state your nationality in Luxembourgish, use <strong>Ech sinn</strong> followed by the nationality adjective.</p><ul><li><strong>Ech sinn Letzebuerger/Letzebuergesch.</strong> -- I am Luxembourgish (m/f).</li><li><strong>Ech sinn Franseisch.</strong> -- I am French.</li><li><strong>Ech sinn Daeitsch.</strong> -- I am German.</li></ul><p>To ask: <strong>Wat bass du vun Nationaliteit?</strong></p>',
+            exercises: [
+              { type: 'multiple-choice', prompt: "How do you say 'I am Luxembourgish' (male)?", options: ['Ech sinn Letzebuerger', 'Ech sinn Franseisch', 'Ech sinn Portugisesch', 'Ech sinn Belsch'], correctAnswer: 'Ech sinn Letzebuerger', explanation: 'Letzebuerger is the masculine nationality adjective.' },
+              { type: 'fill-blank', prompt: 'Complete: Ech ___ Franseisch. (I am French.)', options: null, correctAnswer: 'sinn', explanation: 'Ech sinn = I am.' },
+            ],
+          },
+          reading: {
+            title: 'At the Embassy',
+            content: '<h3>Op der Ambassade</h3><p><strong>Beamten:</strong> Moien! Wei heescht Dir?</p><p><strong>Maria:</strong> Ech heeschen Maria. Ech sinn Portugisesch.</p><p><strong>Beamten:</strong> Schwatzt Dir Letzebuergesch?</p><p><strong>Maria:</strong> Jo, e bessen.</p><hr/><p><em>Vocabulary: Beamten = official, Ambassade = embassy, e bessen = a little</em></p>',
+            exercises: [
+              { type: 'multiple-choice', prompt: "What is Maria's nationality?", options: ['Luxembourgish', 'French', 'Portuguese', 'German'], correctAnswer: 'Portuguese', explanation: "Maria says 'Ech sinn Portugisesch'." },
+              { type: 'multiple-choice', prompt: 'Does Maria speak Luxembourgish?', options: ['No', 'Yes, a little', 'Yes, fluently', 'She speaks French'], correctAnswer: 'Yes, a little', explanation: "Maria says 'Jo, e bessen' -- Yes, a little." },
+            ],
+          },
+          listening: {
+            title: 'Introductions',
+            content: '<h3>Sech virstellen -- Introducing oneself</h3><p>Moien! Ech heeschen Tom. Ech sinn Daeitsch, mee ech wunnen zu Letzebuerg. Ech schaffen als Ingenieur. Ech schwatzen Daeitsch, Franseisch an e bessen Letzebuergesch.</p><hr/><p><em>Vocabulary: mee = but, schaffen = to work, als = as, Ingenieur = engineer</em></p>',
+            exercises: [
+              { type: 'multiple-choice', prompt: "What is Tom's nationality?", options: ['Luxembourgish', 'French', 'German', 'Belgian'], correctAnswer: 'German', explanation: "Tom says 'Ech sinn Daeitsch'." },
+              { type: 'multiple-choice', prompt: "What is Tom's profession?", options: ['Teacher', 'Doctor', 'Engineer', 'Chef'], correctAnswer: 'Engineer', explanation: "'Ech schaffen als Ingenieur' = I work as an engineer." },
+            ],
+          },
+          speaking: {
+            title: 'Introduce Yourself',
+            content: '<h3>Stell dech vir!</h3><p>Use these patterns:</p><ul><li><strong>Moien! Ech heeschen...</strong> (Hello! My name is...)</li><li><strong>Ech sinn...</strong> (I am... [nationality])</li><li><strong>Ech wunnen zu...</strong> (I live in...)</li><li><strong>Ech schwatzen...</strong> (I speak...)</li></ul>',
+            exercises: [
+              { type: 'multiple-choice', prompt: "How do you say 'I live in Luxembourg'?", options: ['Ech wunnen zu Letzebuerg', 'Ech schaffen zu Letzebuerg', 'Ech sinn zu Letzebuerg', 'Ech heeschen Letzebuerg'], correctAnswer: 'Ech wunnen zu Letzebuerg', explanation: 'Wunnen = to live.' },
+            ],
+          },
+        },
+      };
+
+      for (const chapter of allChapters) {
+        const linkCount = await prisma.chapterLesson.count({ where: { chapterId: chapter.id } });
+        if (linkCount > 0) continue;
+
+        const content = chapterContent[chapter.orderIndex];
+
+        for (let si = 0; si < skills.length; si++) {
+          const skill = skills[si];
+          const currKey = { languageCode: 'lb', level: chapter.level, skill };
+          let curriculum = await prisma.curriculum.findUnique({ where: { languageCode_level_skill: currKey } });
+          if (!curriculum) {
+            curriculum = await prisma.curriculum.create({ data: { ...currKey, title: `${chapter.level} ${skill}` } });
+          }
+
+          const skillContent = content?.[skill];
+          const lessonTitle = skillContent?.title || `${chapter.title} - ${skill.charAt(0).toUpperCase() + skill.slice(1)}`;
+          const bodyText = skillContent?.content || `<h3>${chapter.title} - ${skill.charAt(0).toUpperCase() + skill.slice(1)}</h3><p>${chapter.description}</p><p>Practice ${skill} skills for this chapter topic.</p>`;
+          const exerciseDefs = skillContent?.exercises || [
+            { type: 'multiple-choice', prompt: `What is the topic of this chapter?`, options: [chapter.title, 'Greetings', 'Numbers', 'Colors'], correctAnswer: chapter.title, explanation: `This chapter covers: ${chapter.description}` },
+          ];
+
+          const lesson = await prisma.lesson.create({
+            data: {
+              curriculumId: curriculum.id,
+              title: lessonTitle,
+              orderIndex: si,
+              content: { create: [{ type: 'text', body: bodyText, orderIndex: 0 }] },
+              exercises: {
+                create: exerciseDefs.map((e, ei) => ({
+                  type: e.type,
+                  prompt: e.prompt,
+                  options: e.options || [],
+                  correctAnswer: e.correctAnswer,
+                  explanation: e.explanation,
+                  orderIndex: ei,
+                })),
+              },
+            },
+          });
+
+          await prisma.chapterLesson.create({
+            data: { chapterId: chapter.id, lessonId: lesson.id, skill, orderIndex: si },
+          });
+        }
+        console.log(`Created lessons for: ${chapter.title}`);
+      }
     }
 
     console.log('Chapter lesson seeding complete');

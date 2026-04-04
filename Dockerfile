@@ -36,6 +36,9 @@ COPY server/package.json server/
 
 RUN npm ci --omit=dev
 
+# Install tsx for prisma seed (needed at runtime)
+RUN npm install tsx
+
 # Copy Prisma schema and migrations
 COPY server/prisma/ server/prisma/
 
