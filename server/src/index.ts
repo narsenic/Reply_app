@@ -116,7 +116,7 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
 });
 
 
-// Seed chapters on startup if none exist
+// Seed chapters and lessons on startup if needed
 async function seedChaptersOnStartup() {
   try {
     const { prisma } = await import('./lib/prisma');
@@ -125,36 +125,79 @@ async function seedChaptersOnStartup() {
     await prisma.language.upsert({ where: { code: 'lb' }, update: {}, create: { code: 'lb', name: 'Luxembourgish', isDefault: true } });
     
     // Check if chapters already exist
-    const count = await prisma.chapter.count();
-    if (count > 0) { console.log('Chapters already seeded:', count); return; }
-    
-    const chapters = [
-      { title: 'Nationality', description: 'Introducing yourself, nationalities, languages', level: 'A1', orderIndex: 0 },
-      { title: 'Gefalen - Likes', description: 'Expressing preferences and what you enjoy', level: 'A1', orderIndex: 1 },
-      { title: 'Weidoen - Health', description: 'Body parts, pain, health vocabulary', level: 'A1', orderIndex: 2 },
-      { title: 'Apdikt - Pharmacy', description: 'At the pharmacy, buying medicine', level: 'A1', orderIndex: 3 },
-      { title: 'An der Stad', description: 'In the city, directions, places', level: 'A1', orderIndex: 4 },
-      { title: 'Prepo - Prepositions', description: 'Spatial relationships and prepositions', level: 'A1', orderIndex: 5 },
-      { title: 'An der Stad 2', description: 'More city vocabulary and navigation', level: 'A1', orderIndex: 6 },
-      { title: 'Mai Program', description: 'Daily routine, schedule, time', level: 'A1', orderIndex: 7 },
-      { title: 'Haus - House', description: 'Rooms, furniture, home vocabulary', level: 'A1', orderIndex: 8 },
-      { title: 'Review', description: 'Revision of chapters 1-9', level: 'A1', orderIndex: 9 },
-      { title: 'Perfect hunn', description: 'Past tense with hunn (to have)', level: 'A2', orderIndex: 0 },
-      { title: 'Perfect sinn', description: 'Past tense with sinn (to be)', level: 'A2', orderIndex: 1 },
-      { title: 'Vakanz - Vacation', description: 'Travel, holidays, vacation vocabulary', level: 'A2', orderIndex: 2 },
-      { title: 'Imperfect', description: 'Imperfect tense for past events', level: 'A2', orderIndex: 3 },
-      { title: 'Kleeder - Clothes', description: 'Clothing vocabulary and shopping', level: 'A2', orderIndex: 4 },
-      { title: 'Comparison', description: 'Comparing things', level: 'A2', orderIndex: 5 },
-      { title: 'Well - Because', description: 'Giving reasons, conjunctions', level: 'A2', orderIndex: 6 },
-      { title: 'Wellen - To want', description: 'Modal verbs and expressing desires', level: 'A2', orderIndex: 7 },
-      { title: 'Reflexive Verbs 1', description: 'Introduction to reflexive verbs', level: 'A2', orderIndex: 8 },
-      { title: 'Reflexive Verbs 2', description: 'Advanced reflexive verb patterns', level: 'A2', orderIndex: 9 },
-    ];
-    
-    for (const ch of chapters) {
-      await prisma.chapter.create({ data: { ...ch, learningPath: 'daily_life', published: true } });
+    const chapterCount = await prisma.chapter.count();
+    if (chapterCount === 0) {
+      const chapters = [
+        { title: 'Nationaliteit', description: 'Introducing yourself, nationalities, languages', level: 'A1', orderIndex: 0 },
+        { title: 'Gefalen', description: 'Expressing likes, dislikes, and preferences', level: 'A1', orderIndex: 1 },
+        { title: 'Weidoen', description: 'Body parts, pain, health vocabulary', level: 'A1', orderIndex: 2 },
+        { title: 'Apdikt', description: 'At the pharmacy, buying medicine', level: 'A1', orderIndex: 3 },
+        { title: 'An der Stad', description: 'In the city, directions, places', level: 'A1', orderIndex: 4 },
+        { title: 'Prepo', description: 'Prepositions of place and movement', level: 'A1', orderIndex: 5 },
+        { title: 'An der Stad 2', description: 'More city vocabulary and navigation', level: 'A1', orderIndex: 6 },
+        { title: 'Mai Program', description: 'Daily routine, schedule, time', level: 'A1', orderIndex: 7 },
+        { title: 'Haus', description: 'Rooms, furniture, home vocabulary', level: 'A1', orderIndex: 8 },
+        { title: 'Revisioun', description: 'Revision of chapters 1-9', level: 'A1', orderIndex: 9 },
+        { title: 'Perfect mat hunn', description: 'Past tense with hunn (to have)', level: 'A2', orderIndex: 0 },
+        { title: 'Perfect mat sinn', description: 'Past tense with sinn (to be)', level: 'A2', orderIndex: 1 },
+        { title: 'Vakanz', description: 'Travel, holidays, vacation vocabulary', level: 'A2', orderIndex: 2 },
+        { title: 'Imperfect', description: 'Imperfect tense for past events', level: 'A2', orderIndex: 3 },
+        { title: 'Kleeder', description: 'Clothing vocabulary and shopping', level: 'A2', orderIndex: 4 },
+        { title: 'Verglaich', description: 'Comparing things', level: 'A2', orderIndex: 5 },
+        { title: 'Well', description: 'Giving reasons, conjunctions', level: 'A2', orderIndex: 6 },
+        { title: 'Wellen', description: 'Modal verbs and expressing desires', level: 'A2', orderIndex: 7 },
+        { title: 'Reflexiv Verben 1', description: 'Introduction to reflexive verbs', level: 'A2', orderIndex: 8 },
+        { title: 'Reflexiv Verben 2', description: 'Advanced reflexive verb patterns', level: 'A2', orderIndex: 9 },
+      ];
+      for (const ch of chapters) {
+        await prisma.chapter.create({ data: { ...ch, learningPath: 'daily_life', published: true } });
+      }
+      console.log('Seeded 20 chapters');
     }
-    console.log('Seeded 20 chapters successfully');
+
+    // Ensure every chapter has at least 4 lessons (one per skill) linked via ChapterLesson
+    const allChapters = await prisma.chapter.findMany({ orderBy: [{ level: 'asc' }, { orderIndex: 'asc' }] });
+    const skills = ['grammar', 'reading', 'listening', 'speaking'] as const;
+
+    for (const chapter of allChapters) {
+      const linkCount = await prisma.chapterLesson.count({ where: { chapterId: chapter.id } });
+      if (linkCount > 0) continue; // already has lessons
+
+      for (let si = 0; si < skills.length; si++) {
+        const skill = skills[si];
+        // Ensure curriculum exists
+        const currKey = { languageCode: 'lb', level: chapter.level, skill };
+        let curriculum = await prisma.curriculum.findUnique({ where: { languageCode_level_skill: currKey } });
+        if (!curriculum) {
+          curriculum = await prisma.curriculum.create({ data: { ...currKey, title: `${chapter.level} ${skill}` } });
+        }
+
+        const lesson = await prisma.lesson.create({
+          data: {
+            curriculumId: curriculum.id,
+            title: `${chapter.title} - ${skill.charAt(0).toUpperCase() + skill.slice(1)}`,
+            orderIndex: si,
+            content: {
+              create: [
+                { type: 'text', body: `${skill.charAt(0).toUpperCase() + skill.slice(1)} lesson for "${chapter.title}". ${chapter.description}.`, orderIndex: 0 },
+              ],
+            },
+            exercises: {
+              create: [
+                { type: skill === 'grammar' ? 'fill-blank' : 'multiple-choice', prompt: `Practice ${skill} for ${chapter.title}`, options: ['Option A', 'Option B', 'Option C'], correctAnswer: 'Option A', explanation: `This is a ${skill} exercise for ${chapter.title}.`, orderIndex: 0 },
+              ],
+            },
+          },
+        });
+
+        await prisma.chapterLesson.create({
+          data: { chapterId: chapter.id, lessonId: lesson.id, skill, orderIndex: si },
+        });
+      }
+      console.log(`Created lessons for chapter: ${chapter.title}`);
+    }
+
+    console.log('Chapter lesson seeding complete');
   } catch (err) {
     console.error('Chapter seed error:', err);
   }

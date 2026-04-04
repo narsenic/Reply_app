@@ -69,20 +69,19 @@ export default function ChapterMapPage() {
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {chapters.map((ch) => {
-            const isLocked = ch.status === 'locked';
             const isCompleted = ch.status === 'completed';
             return (
               <div
                 key={ch.id}
-                onClick={() => !isLocked && navigate(`/chapters/${ch.id}`)}
-                style={{ ...chapterCard, opacity: isLocked ? 0.55 : 1, cursor: isLocked ? 'not-allowed' : 'pointer',
-                  borderColor: isCompleted ? '#00B894' : isLocked ? '#e0e0e0' : '#6C5CE7' }}
-                role="button" tabIndex={isLocked ? -1 : 0} aria-disabled={isLocked}
+                onClick={() => navigate(`/chapters/${ch.id}`)}
+                style={{ ...chapterCard, cursor: 'pointer',
+                  borderColor: isCompleted ? '#00B894' : '#6C5CE7' }}
+                role="button" tabIndex={0}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flex: 1 }}>
-                  <div style={{ width: 44, height: 44, borderRadius: 12, background: isCompleted ? '#E8F5E9' : isLocked ? '#f5f5f5' : '#F0EDFF',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', flexShrink: 0 }}>
-                    {isLocked ? '🔒' : isCompleted ? '✅' : '📖'}
+                  <div style={{ width: 44, height: 44, borderRadius: 12, background: isCompleted ? '#E8F5E9' : '#F0EDFF',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.95rem', fontWeight: 700, color: isCompleted ? '#00B894' : '#6C5CE7', flexShrink: 0 }}>
+                    {isCompleted ? 'OK' : ch.orderIndex + 1}
                   </div>
                   <div style={{ flex: 1 }}>
                     <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 600, color: '#1a1a1a' }}>{ch.title}</h3>

@@ -39,20 +39,16 @@ export async function listChapters(userId: string, level: string, learningPath: 
     },
   });
 
-  let foundFirstIncomplete = false;
-
   const result = chapters.map((chapter) => {
     const progress = chapter.progress[0];
     const quizPassed = progress?.quizPassed ?? false;
 
+    // All chapters are accessible — no locking
     let status: 'locked' | 'in_progress' | 'completed';
     if (quizPassed) {
       status = 'completed';
-    } else if (!foundFirstIncomplete) {
-      status = 'in_progress';
-      foundFirstIncomplete = true;
     } else {
-      status = 'locked';
+      status = 'in_progress';
     }
 
     return {
@@ -108,8 +104,7 @@ export async function getChapterDetail(userId: string, chapterId: string) {
     throw new AppError(404, 'CHAPTER_NOT_FOUND', `Chapter not found: ${chapterId}`);
   }
 
-  // Enforce chapter locking: check if this chapter is accessible
-  await enforceChapterAccess(userId, chapter.level, chapter.learningPath, chapter.orderIndex);
+  // All chapters are accessible — no locking enforcement
 
   const progress = chapter.progress[0];
 
