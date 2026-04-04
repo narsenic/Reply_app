@@ -1,6 +1,8 @@
 #!/bin/sh
 set -e
 
+echo "Deploying latest build..."
+
 echo "Pushing database schema..."
 npx prisma db push --schema=server/prisma/schema.prisma --accept-data-loss || echo "DB push warning (non-fatal)"
 
