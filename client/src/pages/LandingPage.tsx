@@ -56,6 +56,23 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ─── Value statement ─── */}
+      <section style={{ padding: 'clamp(80px, 12vw, 140px) 24px', background: '#fff', textAlign: 'center' }}>
+        <div style={{ maxWidth: 720, margin: '0 auto' }}>
+          <h2 style={{ fontFamily: SF, fontSize: 'clamp(1.8rem, 4vw, 2.6rem)', fontWeight: 700, letterSpacing: '-0.04em', lineHeight: 1.12, color: '#1d1d1f', margin: '0 0 24px' }}>
+            Built for people who actually<br />want to live in Luxembourg.
+          </h2>
+          <p style={{ fontSize: '1.08rem', fontWeight: 400, color: '#86868b', lineHeight: 1.7, margin: '0 0 32px' }}>
+            Whether you just moved to Luxembourg, need to pass the Sproochentest for citizenship, or simply want to connect with your neighbors in their language — Reply gives you a structured path from zero to fluency. No guesswork. No scattered YouTube videos. Just a clear, chapter-by-chapter curriculum built around real Luxembourgish as it is actually spoken.
+          </p>
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '12px 24px' }}>
+            {['Expats and newcomers', 'Citizenship applicants', 'Cross-border workers', 'Partners and families', 'Language enthusiasts'].map(tag => (
+              <span key={tag} style={{ padding: '8px 20px', borderRadius: 980, background: 'rgba(108,92,231,0.06)', color: '#6C5CE7', fontSize: '0.88rem', fontWeight: 500 }}>{tag}</span>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ─── Features ─── */}
       <section id="features">
         {FEATURES.map((f, i) => (
