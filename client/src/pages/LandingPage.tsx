@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import ReplyLogo from '../components/ReplyLogo';
-import { ConnectedR, FeedbackLoopR, ConversationMarkR } from '../components/LogoConcepts';
 
 const P = '#0D9488';
 // Orange accent: #F97316
@@ -43,36 +42,6 @@ export default function LandingPage() {
         <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
           <Link to="/register" style={{ ...pill, background: P, color: '#fff', boxShadow: '0 2px 12px rgba(108,92,231,0.3)' }}>Start for free</Link>
           <Link to="/assessment" style={{ ...pill, background: 'rgba(0,0,0,0.06)', color: '#1d1d1f' }}>Test your level</Link>
-        </div>
-      </section>
-
-      {/* ─── Logo concepts showcase ─── */}
-      <section style={{ padding: 'clamp(60px, 10vw, 100px) 24px', background: '#fbfbfd', textAlign: 'center' }}>
-        <div style={{ maxWidth: 900, margin: '0 auto' }}>
-          <p style={{ fontSize: '0.75rem', fontWeight: 600, color: '#86868b', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 8 }}>Brand Identity</p>
-          <h2 style={{ fontFamily: SF, fontSize: 'clamp(1.6rem, 3.5vw, 2.2rem)', fontWeight: 700, letterSpacing: '-0.04em', color: '#1d1d1f', margin: '0 0 48px' }}>
-            The mark behind Reply.
-          </h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '2rem' }}>
-            {/* Connected R */}
-            <div style={conceptCard}>
-              <div style={{ marginBottom: 20 }}><ConnectedR size={72} /></div>
-              <h3 style={conceptTitle}>The Connected R</h3>
-              <p style={conceptDesc}>The tail curves into a speech bubble. Every word you say is met with a meaningful response.</p>
-            </div>
-            {/* Feedback Loop */}
-            <div style={conceptCard}>
-              <div style={{ marginBottom: 20 }}><FeedbackLoopR size={72} /></div>
-              <h3 style={conceptTitle}>The Feedback Loop</h3>
-              <p style={conceptDesc}>Two overlapping lines — one guiding, one learning. The arrow represents the hand of a tutor.</p>
-            </div>
-            {/* Conversation Mark */}
-            <div style={conceptCard}>
-              <div style={{ marginBottom: 20 }}><ConversationMarkR size={72} /></div>
-              <h3 style={conceptTitle}>The Conversation Mark</h3>
-              <p style={conceptDesc}>A rounded R with a chat icon in its counter. Professional yet energetic on any screen.</p>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -173,9 +142,6 @@ export default function LandingPage() {
 const navLk: React.CSSProperties = { color: '#1d1d1f', textDecoration: 'none', fontSize: '0.82rem', fontWeight: 400, opacity: 0.8 };
 const navCta: React.CSSProperties = { background: '#0D9488', color: '#fff', padding: '6px 16px', borderRadius: 980, textDecoration: 'none', fontSize: '0.82rem', fontWeight: 500 };
 const pill: React.CSSProperties = { display: 'inline-block', padding: '12px 32px', borderRadius: 980, textDecoration: 'none', fontSize: '1rem', fontWeight: 500 };
-const conceptCard: React.CSSProperties = { background: '#fff', borderRadius: 20, padding: '40px 28px 32px', border: '0.5px solid rgba(0,0,0,0.06)', textAlign: 'center' };
-const conceptTitle: React.CSSProperties = { fontFamily: "SF Pro Display, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif", fontWeight: 600, fontSize: '1.05rem', color: '#1d1d1f', marginBottom: 8 };
-const conceptDesc: React.CSSProperties = { fontSize: '0.88rem', color: '#86868b', lineHeight: 1.55, margin: 0 };
 
 /* ─── Data ─── */
 const STATS: [string, string][] = [['20+', 'Chapters'], ['4', 'Skills'], ['A1-B2', 'CEFR'], ['Free', 'To start']];
