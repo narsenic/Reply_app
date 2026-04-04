@@ -15,6 +15,13 @@ import LessonPage from './pages/LessonPage';
 import GroupSessionPage from './pages/GroupSessionPage';
 import AdminPanel from './pages/AdminPanel';
 import ProfilePage from './pages/ProfilePage';
+import PathSelectionPage from './pages/PathSelectionPage';
+import ChapterMapPage from './pages/ChapterMapPage';
+import ChapterDetailPage from './pages/ChapterDetailPage';
+import ChapterQuizPage from './pages/ChapterQuizPage';
+import PeerPracticePage from './pages/PeerPracticePage';
+import LeaderboardPage from './pages/LeaderboardPage';
+import SproochentestPracticePage from './pages/SproochentestPracticePage';
 
 function RootRedirect() {
   const { isAuthenticated } = useAuth();
@@ -38,6 +45,7 @@ export default function App() {
         <Route path="/assessment" element={<AssessmentPage />} />
         <Route path="/self-select-level" element={<SelfSelectLevelPage />} />
         <Route path="/assessment-result" element={<AssessmentResultPage />} />
+        <Route path="/path-selection" element={<PathSelectionPage />} />
 
         {/* Protected routes */}
         <Route element={<ProtectedRoute />}>
@@ -45,6 +53,12 @@ export default function App() {
           <Route path="/lessons/:id" element={<LessonPage />} />
           <Route path="/group-session" element={<GroupSessionPage />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/chapters" element={<ChapterMapPage />} />
+          <Route path="/chapters/:id" element={<ChapterDetailPage />} />
+          <Route path="/chapters/:id/quiz" element={<ChapterQuizPage />} />
+          <Route path="/speaking/peer" element={<PeerPracticePage />} />
+          <Route path="/leaderboard" element={<LeaderboardPage />} />
+          <Route path="/sproochentest" element={<SproochentestPracticePage />} />
         </Route>
 
         {/* Admin-only routes */}

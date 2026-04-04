@@ -27,7 +27,7 @@ interface LanguageListResponse {
   languages: LanguageItem[];
 }
 
-type Tab = 'curriculum' | 'languages';
+type Tab = 'curriculum' | 'languages' | 'chapters';
 
 const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'] as const;
 const SKILLS = ['grammar', 'reading', 'listening', 'speaking'] as const;
@@ -82,9 +82,16 @@ export default function AdminPanel() {
         >
           Languages
         </button>
+        <button
+          onClick={() => setActiveTab('chapters')}
+          style={activeTab === 'chapters' ? tabActiveBtnStyle : tabBtnStyle}
+          aria-pressed={activeTab === 'chapters'}
+        >
+          Chapters
+        </button>
       </div>
 
-      {activeTab === 'curriculum' ? <CurriculumTab /> : <LanguagesTab />}
+      {activeTab === 'curriculum' ? <CurriculumTab /> : activeTab === 'chapters' ? <ChaptersTab /> : <LanguagesTab />}
     </div>
   );
 }
@@ -378,6 +385,223 @@ function FileUploader() {
       )}
       <button onClick={handleUpload} disabled={!file || uploading} style={primaryBtnStyle}>
         {uploading ? 'Uploading...' : 'Upload'}
+      </button>
+    </div>
+  );
+}
+
+/* ================================================================
+   Chapters Tab
+   ================================================================ */
+
+interface ChapterItem {
+  id: string;
+  title: string;
+  description: string;
+  level: string;
+  learningPath: string;
+  orderIndex: number;
+  published: boolean;
+}
+
+function ChaptersTab() {
+  const [chapters, setChapters] = useState<ChapterItem[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [filterLevel, setFilterLevel] = useState('A1');
+  const [filterPath, setFilterPath] = useState('sproochentest');
+
+  // Form state
+  const [showForm, setShowForm] = useState(false);
+  const [editingChapter, setEditingChapter] = useState<ChapterItem | null>(null);
+  const [formTitle, setFormTitle] = useState('');
+  const [formDesc, setFormDesc] = useState('');
+  const [formLevel, setFormLevel] = useState('A1');
+  const [formPath, setFormPath] = useState('sproochentest');
+  const [formOrder, setFormOrder] = useState(0);
+  const [formSaving, setFormSaving] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
+
+  const fetchChapters = useCallback(async () => {
+    setLoading(true); setError(null);
+    try {
+      const res = await apiClient.get('/api/chapters', { params: { level: filterLevel, path: filterPath } });
+      setChapters(res.data.chapters || []);
+    } catch { setError('Failed to load chapters.'); }
+    finally { setLoading(false); }
+  }, [filterLevel, filterPath]);
+
+  useEffect(() => { fetchChapters(); }, [fetchChapters]);
+
+  const openCreate = () => {
+    setEditingChapter(null);
+    setFormTitle(''); setFormDesc(''); setFormLevel(filterLevel); setFormPath(filterPath);
+    setFormOrder(chapters.length); setFormError(null); setShowForm(true);
+  };
+
+  const openEdit = (ch: ChapterItem) => {
+    setEditingChapter(ch);
+    setFormTitle(ch.title); setFormDesc(ch.description); setFormLevel(ch.level);
+    setFormPath(ch.learningPath); setFormOrder(ch.orderIndex); setFormError(null); setShowForm(true);
+  };
+
+  const handleSave = async () => {
+    if (!formTitle.trim() || !formDesc.trim()) { setFormError('Title and description are required'); return; }
+    setFormSaving(true); setFormError(null);
+    try {
+      if (editingChapter) {
+        await apiClient.put(`/api/chapters/${editingChapter.id}`, {
+          title: formTitle.trim(), description: formDesc.trim(), level: formLevel,
+          learningPath: formPath, orderIndex: formOrder,
+        });
+      } else {
+        await apiClient.post('/api/chapters', {
+          title: formTitle.trim(), description: formDesc.trim(), level: formLevel,
+          learningPath: formPath, orderIndex: formOrder,
+        });
+      }
+      setShowForm(false); fetchChapters();
+    } catch { setFormError('Failed to save chapter.'); }
+    finally { setFormSaving(false); }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Delete this chapter and all its content?')) return;
+    try { await apiClient.delete(`/api/chapters/${id}`); fetchChapters(); }
+    catch { setError('Failed to delete chapter.'); }
+  };
+
+  const handlePublish = async (ch: ChapterItem) => {
+    try { await apiClient.put(`/api/chapters/${ch.id}`, { published: !ch.published }); fetchChapters(); }
+    catch { setError('Failed to update chapter.'); }
+  };
+
+  return (
+    <div>
+      <div style={filterRowStyle}>
+        <label style={filterLabelStyle}>
+          Level
+          <select value={filterLevel} onChange={(e) => setFilterLevel(e.target.value)} style={selectStyle}>
+            {CEFR_LEVELS.map((l) => <option key={l} value={l}>{l}</option>)}
+          </select>
+        </label>
+        <label style={filterLabelStyle}>
+          Path
+          <select value={filterPath} onChange={(e) => setFilterPath(e.target.value)} style={selectStyle}>
+            <option value="sproochentest">Sproochentest</option>
+            <option value="daily_life">Daily Life</option>
+          </select>
+        </label>
+        <button onClick={openCreate} style={primaryBtnStyle}>+ New Chapter</button>
+      </div>
+
+      {showForm && (
+        <div style={formCardStyle}>
+          <h3 style={{ margin: '0 0 0.75rem' }}>{editingChapter ? 'Edit Chapter' : 'New Chapter'}</h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <input type="text" placeholder="Title" value={formTitle} onChange={(e) => setFormTitle(e.target.value)} style={inputStyle} aria-label="Chapter title" />
+            <input type="text" placeholder="Description" value={formDesc} onChange={(e) => setFormDesc(e.target.value)} style={inputStyle} aria-label="Chapter description" />
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <select value={formLevel} onChange={(e) => setFormLevel(e.target.value)} style={selectStyle} aria-label="Level">
+                {CEFR_LEVELS.map((l) => <option key={l} value={l}>{l}</option>)}
+              </select>
+              <select value={formPath} onChange={(e) => setFormPath(e.target.value)} style={selectStyle} aria-label="Learning path">
+                <option value="sproochentest">Sproochentest</option>
+                <option value="daily_life">Daily Life</option>
+              </select>
+              <input type="number" placeholder="Order" value={formOrder} onChange={(e) => setFormOrder(Number(e.target.value))} style={{ ...inputStyle, width: 80 }} aria-label="Order index" />
+            </div>
+          </div>
+          {formError && <p style={inlineErrorStyle}>{formError}</p>}
+          <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.75rem' }}>
+            <button onClick={handleSave} disabled={formSaving} style={primaryBtnStyle}>{formSaving ? 'Saving...' : 'Save'}</button>
+            <button onClick={() => setShowForm(false)} style={secondaryBtnStyle}>Cancel</button>
+          </div>
+        </div>
+      )}
+
+      {loading && <p style={mutedTextStyle}>Loading chapters...</p>}
+      {error && <p style={inlineErrorStyle}>{error}</p>}
+      {!loading && chapters.length === 0 && !error && <p style={mutedTextStyle}>No chapters found.</p>}
+      {chapters.length > 0 && (
+        <table style={tableStyle}>
+          <thead>
+            <tr>
+              <th style={thStyle}>#</th>
+              <th style={thStyle}>Title</th>
+              <th style={thStyle}>Status</th>
+              <th style={thStyle}>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {chapters.map((ch, idx) => (
+              <tr key={ch.id}>
+                <td style={tdStyle}>{ch.orderIndex}</td>
+                <td style={tdStyle}>{ch.title}<br /><span style={{ fontSize: '0.78rem', color: '#888' }}>{ch.description}</span></td>
+                <td style={tdStyle}>{ch.published ? '✅ Published' : '📝 Draft'}</td>
+                <td style={tdStyle}>
+                  <div style={{ display: 'flex', gap: '0.35rem', flexWrap: 'wrap' }}>
+                    <button onClick={() => openEdit(ch)} style={smallBtnStyle}>Edit</button>
+                    <button onClick={() => handlePublish(ch)} style={smallBtnStyle}>{ch.published ? 'Unpublish' : 'Publish'}</button>
+                    <button onClick={() => handleDelete(ch.id)} style={dangerSmallBtnStyle}>Delete</button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
+      <ChapterMaterialUploader />
+    </div>
+  );
+}
+
+function ChapterMaterialUploader() {
+  const [chapterId, setChapterId] = useState('');
+  const [skill, setSkill] = useState('grammar');
+  const [files, setFiles] = useState<FileList | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [uploadResult, setUploadResult] = useState<{ fileUrl: string; fileType: string; originalName: string }[] | null>(null);
+
+  const handleUpload = async () => {
+    if (!chapterId.trim() || !files || files.length === 0) { setUploadError('Chapter ID and files are required'); return; }
+    setUploading(true); setUploadError(null); setUploadResult(null);
+    try {
+      const formData = new FormData();
+      formData.append('skill', skill);
+      for (let i = 0; i < files.length; i++) formData.append('files', files[i]);
+      const res = await apiClient.post(`/api/curriculum/chapters/${chapterId}/upload`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      setUploadResult(res.data.uploadedFiles);
+    } catch (err: any) {
+      setUploadError(err?.response?.data?.message || 'Upload failed.');
+    } finally { setUploading(false); }
+  };
+
+  return (
+    <div style={formCardStyle}>
+      <h3 style={{ margin: '0 0 0.75rem' }}>Upload Chapter Materials</h3>
+      <p style={mutedTextStyle}>Upload PDF, MP3, WAV, or text files to a chapter.</p>
+      <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'flex-end', marginTop: '0.75rem' }}>
+        <label style={filterLabelStyle}>
+          Chapter ID
+          <input type="text" value={chapterId} onChange={(e) => setChapterId(e.target.value)} placeholder="Chapter UUID" style={inputStyle} aria-label="Chapter ID" />
+        </label>
+        <label style={filterLabelStyle}>
+          Skill
+          <select value={skill} onChange={(e) => setSkill(e.target.value)} style={selectStyle} aria-label="Skill">
+            {SKILLS.map((s) => <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>)}
+          </select>
+        </label>
+      </div>
+      <input type="file" multiple accept=".pdf,.mp3,.wav,.txt" onChange={(e) => setFiles(e.target.files)} style={{ marginTop: '0.5rem' }} aria-label="Material files" />
+      {uploadError && <p style={inlineErrorStyle}>{uploadError}</p>}
+      {uploadResult && <p style={{ fontSize: '0.85rem', color: '#16a34a', marginTop: '0.5rem' }}>Uploaded {uploadResult.length} file(s) successfully.</p>}
+      <button onClick={handleUpload} disabled={uploading} style={{ ...primaryBtnStyle, marginTop: '0.75rem' }}>
+        {uploading ? 'Uploading...' : 'Upload Materials'}
       </button>
     </div>
   );

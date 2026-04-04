@@ -28,6 +28,37 @@ export async function addLanguage(code: string, name: string) {
   return { code: language.code, name: language.name, isDefault: language.isDefault };
 }
 
+export type LearningPath = 'sproochentest' | 'daily_life';
+
+const VALID_LEARNING_PATHS: LearningPath[] = ['sproochentest', 'daily_life'];
+
+export async function setLearningPath(userId: string, learningPath: LearningPath) {
+  if (!VALID_LEARNING_PATHS.includes(learningPath)) {
+    throw new AppError(400, 'INVALID_LEARNING_PATH', 'Learning path must be "sproochentest" or "daily_life"');
+  }
+
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  if (!user) {
+    throw new AppError(404, 'USER_NOT_FOUND', 'User not found');
+  }
+
+  // Preserve progress on path switch — no deletion of ChapterProgress records
+  const updated = await prisma.user.update({
+    where: { id: userId },
+    data: { learningPath },
+    select: {
+      id: true,
+      email: true,
+      displayName: true,
+      targetLanguageCode: true,
+      learningPath: true,
+      totalXp: true,
+    },
+  });
+
+  return updated;
+}
+
 export async function switchUserLanguage(userId: string, languageCode: string) {
   const language = await prisma.language.findUnique({ where: { code: languageCode } });
   if (!language) {

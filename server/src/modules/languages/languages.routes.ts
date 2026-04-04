@@ -2,7 +2,7 @@ import { Router, Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
 import { validate } from '../../middleware/validate';
 import { requireAuth, requireAdmin } from '../../middleware/auth.middleware';
-import { listLanguages, addLanguage, switchUserLanguage } from './languages.service';
+import { listLanguages, addLanguage, switchUserLanguage, setLearningPath } from './languages.service';
 
 const router = Router();
 
@@ -44,6 +44,27 @@ const switchLanguageSchema = z.object({
 });
 
 export const userLanguageRouter = Router();
+
+// PUT /api/users/learning-path
+const setLearningPathSchema = z.object({
+  learningPath: z.enum(['sproochentest', 'daily_life'], {
+    errorMap: () => ({ message: 'Learning path must be "sproochentest" or "daily_life"' }),
+  }),
+});
+
+userLanguageRouter.put(
+  '/learning-path',
+  requireAuth,
+  validate({ body: setLearningPathSchema }),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await setLearningPath(req.userId!, req.body.learningPath);
+      res.status(200).json(result);
+    } catch (err) {
+      next(err);
+    }
+  },
+);
 
 // PUT /api/users/:id/target-language
 userLanguageRouter.put(

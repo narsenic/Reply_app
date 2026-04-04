@@ -32,3 +32,6 @@ npm-debug.log*
 # Prisma
 server/prisma/*.db
 server/prisma/migrations/*.db
+
+# Study materials (upload via admin panel)
+Study_Materials/

@@ -14,6 +14,7 @@ import {
   VALID_CEFR_LEVELS,
   VALID_SKILLS,
 } from './curriculum.service';
+import { prisma } from '../../lib/prisma';
 
 const router = Router();
 
@@ -34,7 +35,7 @@ const upload = multer({
     } else {
       cb(
         new AppError(
-          400,
+          415,
           'UNSUPPORTED_FILE_FORMAT',
           `Unsupported file format: ${file.mimetype}. Accepted formats: PDF, MP3, WAV, MP4, plain text.`,
         ) as any,
@@ -175,6 +176,120 @@ router.delete(
     try {
       const result = await deleteLesson(req.params.id as string);
       res.status(200).json(result);
+    } catch (err) {
+      next(err);
+    }
+  },
+);
+
+// --- Chapter Material Upload ---
+
+const chapterUploadSkillSchema = z.object({
+  skill: z.enum(['grammar', 'reading', 'listening', 'speaking'], {
+    errorMap: () => ({ message: 'Skill must be one of: grammar, reading, listening, speaking' }),
+  }),
+});
+
+// POST /api/curriculum/chapters/:chapterId/upload (Admin only, multipart)
+router.post(
+  '/chapters/:chapterId/upload',
+  requireAdmin,
+  upload.array('files', 10),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const chapterId = req.params.chapterId as string;
+      const skill = req.body.skill;
+
+      if (!skill || !['grammar', 'reading', 'listening', 'speaking'].includes(skill)) {
+        throw new AppError(400, 'VALIDATION_ERROR', 'Skill is required and must be grammar, reading, listening, or speaking');
+      }
+
+      const chapter = await prisma.chapter.findUnique({ where: { id: chapterId } });
+      if (!chapter) {
+        throw new AppError(404, 'CHAPTER_NOT_FOUND', `Chapter not found: ${chapterId}`);
+      }
+
+      const files = req.files as Express.Multer.File[];
+      if (!files || files.length === 0) {
+        throw new AppError(400, 'FILE_REQUIRED', 'At least one file is required');
+      }
+
+      // Get current max orderIndex for content blocks in this chapter
+      // We'll create content blocks linked to a lesson in this chapter
+      const uploadedFiles = [];
+      for (const file of files) {
+        const { fileUrl, fileType } = await uploadToS3(file.buffer, file.originalname, file.mimetype);
+        uploadedFiles.push({
+          fileUrl,
+          fileType,
+          originalName: file.originalname,
+        });
+      }
+
+      res.status(201).json({ uploadedFiles });
+    } catch (err) {
+      next(err);
+    }
+  },
+);
+
+// PUT /api/curriculum/chapters/:chapterId/materials/reorder (Admin only)
+const reorderMaterialsSchema = z.object({
+  contentBlockIds: z.array(z.string().min(1)).min(1, 'At least one content block ID is required'),
+});
+
+router.put(
+  '/chapters/:chapterId/materials/reorder',
+  requireAdmin,
+  validate({ body: reorderMaterialsSchema }),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { contentBlockIds } = req.body;
+
+      // Validate all IDs exist
+      const blocks = await prisma.contentBlock.findMany({
+        where: { id: { in: contentBlockIds } },
+      });
+
+      if (blocks.length !== contentBlockIds.length) {
+        const foundIds = new Set(blocks.map((b: any) => b.id));
+        const missing = contentBlockIds.filter((id: string) => !foundIds.has(id));
+        throw new AppError(400, 'BLOCKS_NOT_FOUND', `Content blocks not found: ${missing.join(', ')}`);
+      }
+
+      // Update order indices
+      await prisma.$transaction(
+        contentBlockIds.map((id: string, index: number) =>
+          prisma.contentBlock.update({
+            where: { id },
+            data: { orderIndex: index },
+          }),
+        ),
+      );
+
+      res.status(200).json({ message: 'Materials reordered successfully' });
+    } catch (err) {
+      next(err);
+    }
+  },
+);
+
+// DELETE /api/curriculum/chapters/:chapterId/materials/:id (Admin only)
+router.delete(
+  '/chapters/:chapterId/materials/:id',
+  requireAdmin,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const blockId = req.params.id as string;
+
+      const block = await prisma.contentBlock.findUnique({ where: { id: blockId } });
+      if (!block) {
+        throw new AppError(404, 'BLOCK_NOT_FOUND', `Content block not found: ${blockId}`);
+      }
+
+      await prisma.contentBlock.delete({ where: { id: blockId } });
+
+      res.status(200).json({ message: 'Material deleted successfully' });
     } catch (err) {
       next(err);
     }

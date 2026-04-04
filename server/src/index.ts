@@ -14,7 +14,14 @@ import speakingRoutes from './modules/speaking/speaking.routes';
 import groupsRoutes from './modules/groups/groups.routes';
 import progressRoutes from './modules/progress/progress.routes';
 import languagesRoutes, { userLanguageRouter } from './modules/languages/languages.routes';
+import chaptersRoutes from './modules/chapters/chapters.routes';
+import quizzesRoutes from './modules/quizzes/quizzes.routes';
+import gamificationRoutes from './modules/gamification/gamification.routes';
+import leaderboardRoutes from './modules/leaderboard/leaderboard.routes';
+import sproochentestRoutes from './modules/sproochentest/sproochentest.routes';
+import peersRoutes from './modules/peers/peers.routes';
 import { registerGroupSocketHandlers } from './modules/groups/groups.socket';
+import { registerPeerSocketHandlers } from './modules/peers/peers.socket';
 
 dotenv.config();
 
@@ -53,6 +60,12 @@ app.use('/api/groups', groupsRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/languages', languagesRoutes);
 app.use('/api/users', userLanguageRouter);
+app.use('/api/chapters', chaptersRoutes);
+app.use('/api/chapters', quizzesRoutes);
+app.use('/api/gamification', gamificationRoutes);
+app.use('/api/leaderboard', leaderboardRoutes);
+app.use('/api/sproochentest', sproochentestRoutes);
+app.use('/api/peers', peersRoutes);
 
 // HTTP server + Socket.IO
 const httpServer = createServer(app);
@@ -65,6 +78,9 @@ const io = new SocketIOServer(httpServer, {
 
 // Register Socket.IO event handlers for group chat
 registerGroupSocketHandlers(io);
+
+// Register Socket.IO event handlers for peer WebRTC signaling
+registerPeerSocketHandlers(io);
 
 // SPA catch-all: serve index.html for any non-API GET request (client-side routing)
 app.get('*', (_req: Request, res: Response) => {

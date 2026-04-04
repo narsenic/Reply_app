@@ -1,5 +1,7 @@
 import { prisma } from '../../lib/prisma';
 import { AppError } from '../../types/api';
+import { awardXP, updateStreak, checkAndAwardBadges } from '../gamification/gamification.service';
+import { updateChapterProgress } from '../chapters/chapters.service';
 
 export type CEFRLevel = 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
 export type SkillComponent = 'grammar' | 'reading' | 'listening' | 'speaking';
@@ -227,10 +229,44 @@ export async function completeLesson(
     }
   }
 
+  // --- Gamification: award XP, update streak, check badges ---
+  let xpGained = 0;
+  let newBadges: string[] = [];
+
+  try {
+    const xpResult = await awardXP(userId, 'lesson_completion');
+    xpGained = xpResult.xpGained;
+
+    await updateStreak(userId);
+
+    const badgeResult = await checkAndAwardBadges(userId);
+    newBadges = badgeResult.newBadges;
+  } catch {
+    // Gamification failures should not break lesson completion
+  }
+
+  // --- Chapter progress: update chapter progress when lesson is part of a chapter ---
+  try {
+    const chapterLesson = await prisma.chapterLesson.findFirst({
+      where: { lessonId },
+    });
+    if (chapterLesson) {
+      await updateChapterProgress(
+        userId,
+        chapterLesson.chapterId,
+        chapterLesson.skill as 'grammar' | 'reading' | 'listening' | 'speaking',
+      );
+    }
+  } catch {
+    // Chapter progress failures should not break lesson completion
+  }
+
   return {
     lessonId,
     score,
     completed: true,
+    xpGained,
+    newBadges,
     ...(levelUp && {
       levelUp: true,
       message: `Congratulations! You completed all ${skill} lessons at ${level}. Ready for ${nextLevel}!`,

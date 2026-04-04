@@ -25,6 +25,8 @@ model User {
   failedLoginAttempts Int       @default(0)
   lockoutUntil        DateTime?
   targetLanguageCode  String    @default("lb")
+  learningPath        String?
+  totalXp             Int       @default(0)
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
 
@@ -33,6 +35,14 @@ model User {
   assessments         AssessmentResult[]
   groupParticipations GroupSessionParticipant[]
   chatMessages        ChatMessage[]
+  quizAttempts        QuizAttempt[]
+  chapterProgress     ChapterProgress[]
+  speakingAttempts    SpeakingAttempt[]
+  xpTransactions      XPTransaction[]
+  streak              Streak?
+  badges              UserBadge[]
+  peerParticipations  PeerSessionParticipant[]
+  peerAvailability    PeerAvailability?
 }
 
 model Language {
@@ -69,11 +79,12 @@ model Lesson {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  curriculum    Curriculum     @relation(fields: [curriculumId], references: [id])
-  content       ContentBlock[]
-  exercises     Exercise[]
-  progress      UserProgress[]
-  groupSessions GroupSession[]
+  curriculum     Curriculum      @relation(fields: [curriculumId], references: [id])
+  content        ContentBlock[]
+  exercises      Exercise[]
+  progress       UserProgress[]
+  groupSessions  GroupSession[]
+  chapterLessons ChapterLesson[]
 }
 
 model ContentBlock {
@@ -161,4 +172,216 @@ model ChatMessage {
 
   session GroupSession @relation(fields: [sessionId], references: [id])
   user    User         @relation(fields: [userId], references: [id])
+}
+
+// ============================================================
+// Phase 2 Models
+// ============================================================
+
+model Chapter {
+  id           String   @id @default(uuid())
+  title        String
+  description  String
+  level        String
+  learningPath String
+  orderIndex   Int
+  published    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  lessons            ChapterLesson[]
+  quiz               ChapterQuiz?
+  speakingPrompts    SpeakingPrompt[]
+  shadowingExercises ShadowingExercise[]
+  progress           ChapterProgress[]
+
+  @@unique([level, learningPath, orderIndex])
+}
+
+model ChapterLesson {
+  id         String @id @default(uuid())
+  chapterId  String
+  lessonId   String
+  skill      String
+  orderIndex Int
+
+  chapter Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  lesson  Lesson  @relation(fields: [lessonId], references: [id])
+
+  @@unique([chapterId, lessonId])
+}
+
+model ChapterProgress {
+  id                  String   @id @default(uuid())
+  userId              String
+  chapterId           String
+  grammarPercent      Int      @default(0)
+  readingPercent      Int      @default(0)
+  listeningPercent    Int      @default(0)
+  speakingPercent     Int      @default(0)
+  allSectionsComplete Boolean  @default(false)
+  quizPassed          Boolean  @default(false)
+  updatedAt           DateTime @updatedAt
+
+  user    User    @relation(fields: [userId], references: [id])
+  chapter Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, chapterId])
+}
+
+model ChapterQuiz {
+  id           String   @id @default(uuid())
+  chapterId    String   @unique
+  passingScore Int      @default(70)
+  createdAt    DateTime @default(now())
+
+  chapter   Chapter        @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  questions QuizQuestion[]
+  attempts  QuizAttempt[]
+}
+
+model QuizQuestion {
+  id                String  @id @default(uuid())
+  quizId            String
+  skill             String
+  type              String
+  prompt            String
+  options           Json?
+  correctAnswer     String
+  explanation       String
+  audioUrl          String?
+  referenceAudioUrl String?
+  orderIndex        Int
+
+  quiz ChapterQuiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
+}
+
+model QuizAttempt {
+  id          String   @id @default(uuid())
+  quizId      String
+  userId      String
+  score       Int
+  passed      Boolean
+  answers     Json
+  completedAt DateTime @default(now())
+
+  quiz ChapterQuiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  user User        @relation(fields: [userId], references: [id])
+}
+
+model SpeakingPrompt {
+  id                  String @id @default(uuid())
+  chapterId           String
+  topic               String
+  suggestedVocabulary String
+  guidingQuestions    Json
+  difficulty          String
+  learningPath        String
+
+  chapter      Chapter       @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  peerSessions PeerSession[]
+}
+
+model ShadowingExercise {
+  id             String @id @default(uuid())
+  chapterId      String
+  nativeAudioUrl String
+  transcript     String
+  orderIndex     Int
+
+  chapter Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+}
+
+model SpeakingAttempt {
+  id                   String   @id @default(uuid())
+  userId               String
+  exerciseId           String
+  exerciseType         String
+  recordingUrl         String
+  pronunciationScore   Int?
+  fluencyScore         Int?
+  vocabularyScore      Int?
+  grammarAccuracyScore Int?
+  playbackSpeed        Float?
+  createdAt            DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model XPTransaction {
+  id           String   @id @default(uuid())
+  userId       String
+  amount       Int
+  activityType String
+  description  String
+  createdAt    DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Streak {
+  id               String    @id @default(uuid())
+  userId           String    @unique
+  currentStreak    Int       @default(0)
+  longestStreak    Int       @default(0)
+  lastActivityDate DateTime?
+  updatedAt        DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Badge {
+  id          String @id @default(uuid())
+  key         String @unique
+  name        String
+  description String
+  iconUrl     String
+  criteria    String
+
+  userBadges UserBadge[]
+}
+
+model UserBadge {
+  id       String   @id @default(uuid())
+  userId   String
+  badgeId  String
+  earnedAt DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id])
+  badge Badge @relation(fields: [badgeId], references: [id])
+
+  @@unique([userId, badgeId])
+}
+
+model PeerSession {
+  id        String    @id @default(uuid())
+  promptId  String?
+  status    String    @default("pending")
+  startedAt DateTime?
+  endedAt   DateTime?
+
+  prompt       SpeakingPrompt?          @relation(fields: [promptId], references: [id])
+  participants PeerSessionParticipant[]
+}
+
+model PeerSessionParticipant {
+  id        String   @id @default(uuid())
+  sessionId String
+  userId    String
+  role      String
+  joinedAt  DateTime @default(now())
+
+  session PeerSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  user    User        @relation(fields: [userId], references: [id])
+
+  @@unique([sessionId, userId])
+}
+
+model PeerAvailability {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  status    String   @default("offline")
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
 }

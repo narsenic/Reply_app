@@ -42,6 +42,9 @@ export default function ProfilePage() {
   const [selectedLang, setSelectedLang] = useState('');
   const [switching, setSwitching] = useState(false);
   const [switchError, setSwitchError] = useState<string | null>(null);
+  const [learningPath, setLearningPath] = useState<string>('');
+  const [pathSwitching, setPathSwitching] = useState(false);
+  const [pathSwitchMsg, setPathSwitchMsg] = useState<string | null>(null);
 
   const fetchData = useCallback(async () => {
     setLoading(true); setError(null);
@@ -68,6 +71,17 @@ export default function ProfilePage() {
     } catch (err: any) {
       setSwitchError(err?.response?.data?.message || 'Failed to switch language.');
     } finally { setSwitching(false); }
+  };
+
+  const handlePathSwitch = async (path: string) => {
+    if (!path || path === learningPath) return;
+    setPathSwitching(true); setPathSwitchMsg(null);
+    try {
+      await apiClient.put('/api/users/learning-path', { learningPath: path });
+      setLearningPath(path);
+      setPathSwitchMsg('Learning path updated! Your previous progress is preserved.');
+    } catch { setPathSwitchMsg('Failed to switch learning path.'); }
+    finally { setPathSwitching(false); }
   };
 
   const handleLogout = () => { logout(); navigate('/login'); };
@@ -158,6 +172,30 @@ export default function ProfilePage() {
             </button>
           </div>
           {switchError && <p style={inlineErrorStyle}>{switchError}</p>}
+        </div>
+
+        {/* Learning Path */}
+        <div style={cardStyle}>
+          <h2 style={cardTitleStyle}>Learning Path</h2>
+          <p style={mutedTextStyle}>Choose your learning focus. Switching preserves all previous progress.</p>
+          <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem', flexWrap: 'wrap' as const }}>
+            {[
+              { key: 'sproochentest', label: '🎓 Sproochentest Preparation' },
+              { key: 'daily_life', label: '🏡 Daily Life Luxembourgish' },
+            ].map((p) => (
+              <button key={p.key} onClick={() => handlePathSwitch(p.key)} disabled={pathSwitching || learningPath === p.key}
+                style={{
+                  padding: '0.6rem 1rem', borderRadius: 12, border: '1.5px solid', cursor: learningPath === p.key ? 'default' : 'pointer',
+                  fontSize: '0.88rem', fontWeight: 600, transition: 'all 0.15s',
+                  background: learningPath === p.key ? '#F0EDFF' : '#fff',
+                  borderColor: learningPath === p.key ? '#6C5CE7' : '#eee',
+                  color: learningPath === p.key ? '#6C5CE7' : '#555',
+                }}>
+                {p.label} {learningPath === p.key && '✓'}
+              </button>
+            ))}
+          </div>
+          {pathSwitchMsg && <p style={{ fontSize: '0.82rem', color: pathSwitchMsg.includes('Failed') ? '#C62828' : '#00B894', marginTop: '0.5rem' }}>{pathSwitchMsg}</p>}
         </div>
 
         {/* Retake assessment */}

@@ -41,7 +41,31 @@ async function main() {
     }
   }
 
-  console.log("Seed complete: language + A1 curriculum created.");
+  // 3. Seed badge definitions
+  await seedBadges();
+
+  console.log("Seed complete: language + A1 curriculum + badges created.");
+}
+
+async function seedBadges() {
+  const badges = [
+    { key: "first_chapter", name: "First Chapter", description: "Complete your first chapter", iconUrl: "📖", criteria: "Complete 1 chapter" },
+    { key: "first_quiz", name: "Quiz Master", description: "Pass your first chapter quiz", iconUrl: "🎯", criteria: "Pass 1 chapter quiz" },
+    { key: "xp_500", name: "Rising Star", description: "Earn 500 XP", iconUrl: "⭐", criteria: "Accumulate 500 XP" },
+    { key: "xp_1000", name: "Dedicated Learner", description: "Earn 1000 XP", iconUrl: "🏆", criteria: "Accumulate 1000 XP" },
+    { key: "level_complete", name: "Level Up", description: "Complete all chapters in a level", iconUrl: "🎓", criteria: "Complete all chapters in a proficiency level" },
+    { key: "streak_7", name: "Week Warrior", description: "7-day streak", iconUrl: "🔥", criteria: "Maintain a 7-day learning streak" },
+    { key: "streak_30", name: "Monthly Champion", description: "30-day streak", iconUrl: "💪", criteria: "Maintain a 30-day learning streak" },
+    { key: "streak_100", name: "Century Club", description: "100-day streak", iconUrl: "👑", criteria: "Maintain a 100-day learning streak" },
+  ];
+
+  for (const badge of badges) {
+    await prisma.badge.upsert({
+      where: { key: badge.key },
+      update: { name: badge.name, description: badge.description, iconUrl: badge.iconUrl, criteria: badge.criteria },
+      create: badge,
+    });
+  }
 }
 
 async function seedGrammarLessons(curriculumId: string) {

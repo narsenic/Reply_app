@@ -13,7 +13,7 @@ export default function RegisterPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    try { await register(email, password, displayName); await login(email, password); navigate('/assessment'); }
+    try { await register(email, password, displayName); await login(email, password); navigate('/dashboard'); }
     catch (err: any) { setError(err?.message || err?.details?.email || 'Registration failed.'); }
   };
 
