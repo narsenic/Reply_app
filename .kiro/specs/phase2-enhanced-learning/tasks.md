@@ -329,8 +329,8 @@ Incremental implementation of Phase 2 features for the Reply Luxembourgish learn
     - Test 409 when inviting non-available peer
     - _Requirements: 7.1, 7.2, 7.3, 7.6, 7.8, 15.1, 15.5_
 
-- [ ] 15. Admin material upload — backend
-  - [ ] 15.1 Extend curriculum module with chapter material upload
+- [x] 15. Admin material upload — backend
+  - [x] 15.1 Extend curriculum module with chapter material upload
     - Implement `uploadMaterials(chapterId, skill, files)` — validate file formats (PDF, MP3, WAV, text), upload to S3, create ContentBlock records linked to chapter
     - Implement `reorderMaterials(chapterId, contentBlockIds)` — reorder content blocks
     - Implement `deleteMaterial(chapterId, contentBlockId)` — remove content block and S3 file
@@ -430,7 +430,7 @@ Incremental implementation of Phase 2 features for the Reply Luxembourgish learn
     - 2-minute timeout display for pending invitations
     - _Requirements: 7.1, 7.2, 7.5, 7.6, 7.8, 15.1, 15.2, 15.6_
 
-  - [ ] 21.2 Create PeerCallView component with WebRTC audio
+  - [x] 21.2 Create PeerCallView component with WebRTC audio
     - Establish WebRTC peer connection using Socket.IO signaling
     - Display shared speaking prompt during call
     - End call button
@@ -467,8 +467,8 @@ Incremental implementation of Phase 2 features for the Reply Luxembourgish learn
     - Show user's own rank if outside top 50
     - _Requirements: 14.1, 14.2, 14.3, 14.4, 14.6_
 
-- [ ] 24. Frontend — Admin panel extensions
-  - [ ] 24.1 Extend AdminPanel with chapter management and material upload
+- [x] 24. Frontend — Admin panel extensions
+  - [x] 24.1 Extend AdminPanel with chapter management and material upload
     - Chapter CRUD: create, edit, delete, reorder chapters
     - Material upload form: select level, chapter, skill; drag-and-drop file upload
     - File format validation on client side (PDF, MP3, WAV, text)
@@ -500,11 +500,11 @@ Incremental implementation of Phase 2 features for the Reply Luxembourgish learn
     - Update existing LessonPage to integrate with chapter progress tracking
     - _Requirements: 1.1, 2.1, 4.1, 7.1, 13.1, 14.1_
 
-- [ ] 27. Checkpoint — Ensure all frontend pages render and connect to backend
+- [x] 27. Checkpoint — Ensure all frontend pages render and connect to backend
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 28. Integration — wire lesson completion to chapter progress
-  - [ ] 28.1 Update progress service to update chapter progress on lesson completion
+- [x] 28. Integration — wire lesson completion to chapter progress
+  - [x] 28.1 Update progress service to update chapter progress on lesson completion
     - When a lesson is completed, look up its ChapterLesson association
     - Recalculate the skill percentage for that chapter and skill
     - Update ChapterProgress record
@@ -512,12 +512,12 @@ Incremental implementation of Phase 2 features for the Reply Luxembourgish learn
     - Trigger XP award (10 XP for lesson completion)
     - _Requirements: 1.4, 1.5, 10.1_
 
-  - [ ] 28.2 Update client API types for Phase 2 responses
+  - [x] 28.2 Update client API types for Phase 2 responses
     - Add TypeScript interfaces in `client/src/types/api.ts` for all Phase 2 API responses
     - Add API client methods in `client/src/api/client.ts` for all Phase 2 endpoints
     - _Requirements: 1.1, 4.1, 7.1, 10.1, 14.1_
 
-- [ ] 29. Final checkpoint — Ensure all tests pass and features are integrated
+- [x] 29. Final checkpoint — Ensure all tests pass and features are integrated
   - Ensure all tests pass, ask the user if questions arise.
 
 ## Notes
