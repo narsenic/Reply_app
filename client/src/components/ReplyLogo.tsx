@@ -4,38 +4,42 @@ interface ReplyLogoProps {
   showText?: boolean;
 }
 
-const DARK = '#1a2744';
+const BLUE = '#3B5998';
+const SF = "SF Pro Display, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif";
 
 /**
- * REPLY wordmark — all caps, dark blue.
- * The R's counter (enclosed hole) is shaped as a speech bubble.
- * Single SVG, no floating elements.
+ * REPLY wordmark — medium blue, Apple SF Pro font.
+ * The R is an SVG with a speech bubble counter. EPLY is rendered in the system font.
  */
 export default function ReplyLogo({ size = 28, light = false }: ReplyLogoProps) {
-  const color = light ? '#fff' : DARK;
-  const h = size;
-  const w = h * 4.1;
+  const color = light ? '#fff' : BLUE;
+  const rSize = size * 1.18;
+  const textSize = size * 0.82;
 
   return (
-    <svg width={w} height={h} viewBox="0 0 410 100" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Reply">
-      {/* R — outer shape */}
-      <path d="M0 100V0h42c8 0 15 1.5 20.5 4.5S71.5 11 74 16s3.5 10.5 3.5 16.5S76 44 74 49s-6.5 9-11 12-12.5 4.5-20.5 4.5H19v34.5H0z" fill={color} />
-      {/* R counter — speech bubble cutout filling the full bowl */}
-      <path d="M19 33c0-10 8-18 18-18s18 8 18 18-8 18-18 18c-3 0-5.8-.7-8.2-2L20 55l4.5-8C21.2 44 19 38.8 19 33z" fill={light ? DARK : '#fff'} />
-      {/* R leg */}
-      <path d="M42 58l22 42H43L22 58h20z" fill={color} />
+    <div style={{ display: 'inline-flex', alignItems: 'flex-end', gap: 0, userSelect: 'none', lineHeight: 1 }}>
+      {/* R with speech bubble counter */}
+      <svg width={rSize * 0.72} height={rSize} viewBox="0 0 72 100" fill="none" style={{ display: 'block', marginRight: -1 }}>
+        {/* R outer */}
+        <path d="M0 100V0h38c7 0 13 1.5 18 4.5s8.5 6.5 11 11 3.5 9.5 3.5 15-1.2 10.5-3.5 15-6 8.5-11 11S45 61 38 61H17v39H0z" fill={color} />
+        {/* Speech bubble cutout — fills the R bowl */}
+        <path d="M17 30.5c0-8.5 7-15.5 15.5-15.5S48 22 48 30.5 41 46 32.5 46c-2.5 0-4.8-.6-6.8-1.6L18 49l4-7c-3.2-3-5-7-5-11.5z" fill={light ? BLUE : '#fff'} />
+        {/* R leg */}
+        <path d="M38 55l24 45H40L17 55h21z" fill={color} />
+      </svg>
 
-      {/* E */}
-      <path d="M90 100V0h45v17H109v22h24v17h-24v27h27v17H90z" fill={color} />
-
-      {/* P */}
-      <path d="M148 100V0h36c7 0 13 1.5 18 4.5s8.5 7 11 12 3.5 10.5 3.5 16.5-1.2 11.5-3.5 16.5-6 9-11 12-11 4.5-18 4.5h-17V100h-19zm19-51h16c4 0 7.2-1.5 9.5-4.5S196 39 196 33s-1.2-8.5-3.5-11.5S188 17 184 17h-16v32z" fill={color} />
-
-      {/* L */}
-      <path d="M230 100V0h19v83h32v17h-51z" fill={color} />
-
-      {/* Y */}
-      <path d="M290 0l21 42 21-42h21l-32 56V100h-19V56L270 0h20z" fill={color} />
-    </svg>
+      {/* EPLY in SF Pro */}
+      <span style={{
+        fontFamily: SF,
+        fontSize: textSize,
+        fontWeight: 700,
+        color,
+        letterSpacing: '-0.02em',
+        lineHeight: 1,
+        marginBottom: size * 0.01,
+      }}>
+        EPLY
+      </span>
+    </div>
   );
 }
