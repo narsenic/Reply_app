@@ -20,8 +20,8 @@ export default function ReplyLogo({ size = 28, light = false }: ReplyLogoProps) 
     <svg width={w} height={h} viewBox="0 0 410 100" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Reply">
       {/* R — outer shape */}
       <path d="M0 100V0h42c8 0 15 1.5 20.5 4.5S71.5 11 74 16s3.5 10.5 3.5 16.5S76 44 74 49s-6.5 9-11 12-12.5 4.5-20.5 4.5H19v34.5H0z" fill={color} />
-      {/* R counter — speech bubble cutout, sized to fill the R's bowl */}
-      <path d="M22 14c0-6 5.5-11 13-11s13 5 13 11-5.5 11-13 11c-2 0-3.8-.4-5.4-1.1L23 28l2.8-5.5C23.4 20.5 22 17.5 22 14z" fill={light ? DARK : '#fff'} />
+      {/* R counter — speech bubble cutout filling the full bowl */}
+      <path d="M19 33c0-10 8-18 18-18s18 8 18 18-8 18-18 18c-3 0-5.8-.7-8.2-2L20 55l4.5-8C21.2 44 19 38.8 19 33z" fill={light ? DARK : '#fff'} />
       {/* R leg */}
       <path d="M42 58l22 42H43L22 58h20z" fill={color} />
 
