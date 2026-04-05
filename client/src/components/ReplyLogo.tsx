@@ -5,8 +5,9 @@ interface ReplyLogoProps {
 }
 
 /**
- * Reply logo — uses the brand logo image directly.
- * Size controls the height. The image scales proportionally.
+ * Reply logo — uses the brand logo image.
+ * mix-blend-mode: multiply removes the light background from the PNG.
+ * For dark backgrounds, use light=true to invert to white.
  */
 export default function ReplyLogo({ size = 32, light = false }: ReplyLogoProps) {
   return (
@@ -17,7 +18,7 @@ export default function ReplyLogo({ size = 32, light = false }: ReplyLogoProps) 
         height: size,
         width: 'auto',
         display: 'block',
-        filter: light ? 'brightness(0) invert(1)' : 'none',
+        mixBlendMode: light ? 'screen' : 'multiply',
       }}
     />
   );
