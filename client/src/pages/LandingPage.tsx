@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import ReplyLogo from '../components/ReplyLogo';
 
-const P = '#1B3FBF';
+const P = '#2B3990';
 // Orange accent: #F97316
 const SF = "SF Pro Display, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif";
 const SFT = "SF Pro Text, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif";
@@ -68,7 +68,7 @@ export default function LandingPage() {
           </p>
           <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '12px 24px' }}>
             {['Expats and newcomers', 'Citizenship applicants', 'Cross-border workers', 'Partners and families', 'Language enthusiasts'].map(tag => (
-              <span key={tag} style={{ padding: '8px 20px', borderRadius: 980, background: 'rgba(27,63,191,0.06)', color: '#1B3FBF', fontSize: '0.88rem', fontWeight: 500 }}>{tag}</span>
+              <span key={tag} style={{ padding: '8px 20px', borderRadius: 980, background: 'rgba(43,57,144,0.06)', color: '#2B3990', fontSize: '0.88rem', fontWeight: 500 }}>{tag}</span>
             ))}
           </div>
         </div>
@@ -140,19 +140,19 @@ export default function LandingPage() {
 
 /* ─── Styles ─── */
 const navLk: React.CSSProperties = { color: '#1d1d1f', textDecoration: 'none', fontSize: '0.82rem', fontWeight: 400, opacity: 0.8 };
-const navCta: React.CSSProperties = { background: '#1B3FBF', color: '#fff', padding: '6px 16px', borderRadius: 980, textDecoration: 'none', fontSize: '0.82rem', fontWeight: 500 };
+const navCta: React.CSSProperties = { background: '#2B3990', color: '#fff', padding: '6px 16px', borderRadius: 980, textDecoration: 'none', fontSize: '0.82rem', fontWeight: 500 };
 const pill: React.CSSProperties = { display: 'inline-block', padding: '12px 32px', borderRadius: 980, textDecoration: 'none', fontSize: '1rem', fontWeight: 500 };
 
 /* ─── Data ─── */
 const STATS: [string, string][] = [['20+', 'Chapters'], ['4', 'Skills'], ['A1-B2', 'CEFR'], ['Free', 'To start']];
 
 const FEATURES = [
-  { icon: 'G', title: 'Grammar that clicks.', desc: 'Verb conjugation, articles, word order. Instant feedback with clear explanations in context.', color: '#1B3FBF', bg: 'rgba(27,63,191,0.08)' },
-  { icon: 'R', title: 'Read real texts.', desc: 'Dialogues, stories, and everyday scenarios. Vocabulary highlights and comprehension questions.', color: '#1B3FBF', bg: 'rgba(27,63,191,0.06)' },
-  { icon: 'L', title: 'Listen and understand.', desc: 'Native audio with transcripts. Shadowing exercises and adjustable playback speed.', color: '#1B3FBF', bg: 'rgba(27,63,191,0.08)' },
-  { icon: 'S', title: 'Speak with confidence.', desc: 'Record yourself, compare with native audio, self-evaluate your pronunciation.', color: '#1B3FBF', bg: 'rgba(27,63,191,0.06)' },
-  { icon: 'XP', title: 'Track everything.', desc: 'Points, streaks, badges, leaderboard. See your progress across every skill and chapter.', color: '#1B3FBF', bg: 'rgba(27,63,191,0.08)' },
-  { icon: 'P', title: 'Practice with peers.', desc: 'Find partners at your level for live speaking sessions. Like a classroom, on your schedule.', color: '#1B3FBF', bg: 'rgba(27,63,191,0.06)' },
+  { icon: 'G', title: 'Grammar that clicks.', desc: 'Verb conjugation, articles, word order. Instant feedback with clear explanations in context.', color: '#2B3990', bg: 'rgba(43,57,144,0.08)' },
+  { icon: 'R', title: 'Read real texts.', desc: 'Dialogues, stories, and everyday scenarios. Vocabulary highlights and comprehension questions.', color: '#2B3990', bg: 'rgba(43,57,144,0.06)' },
+  { icon: 'L', title: 'Listen and understand.', desc: 'Native audio with transcripts. Shadowing exercises and adjustable playback speed.', color: '#2B3990', bg: 'rgba(43,57,144,0.08)' },
+  { icon: 'S', title: 'Speak with confidence.', desc: 'Record yourself, compare with native audio, self-evaluate your pronunciation.', color: '#2B3990', bg: 'rgba(43,57,144,0.06)' },
+  { icon: 'XP', title: 'Track everything.', desc: 'Points, streaks, badges, leaderboard. See your progress across every skill and chapter.', color: '#2B3990', bg: 'rgba(43,57,144,0.08)' },
+  { icon: 'P', title: 'Practice with peers.', desc: 'Find partners at your level for live speaking sessions. Like a classroom, on your schedule.', color: '#2B3990', bg: 'rgba(43,57,144,0.06)' },
 ];
 
 const STEPS = [

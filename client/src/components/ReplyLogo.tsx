@@ -4,49 +4,47 @@ interface ReplyLogoProps {
   light?: boolean;
 }
 
-const BLUE = '#1B3FBF';
+const BLUE = '#2B3990';
 
 /**
- * Reply logo — bold blue wordmark.
- * Oversized "R" with a speech bubble cutout in its counter space.
- * "EPLY" follows in smaller uppercase.
+ * Reply logo — exact reproduction of the brand wordmark.
+ * Large bold "R" with speech bubble in counter, "EPLY" in smaller caps beside it.
+ * All one color, all inline SVG for pixel-perfect rendering at any size.
  */
 export default function ReplyLogo({ size = 32, showText = true, light = false }: ReplyLogoProps) {
+  // The full wordmark is rendered as a single SVG for exact proportions
   const color = light ? '#fff' : BLUE;
-  const rHeight = size;
-  const eplySize = size * 0.58;
+  // Aspect ratio of the full "REPLY" wordmark is roughly 3.8:1
+  const w = showText ? size * 3.8 : size * 0.85;
+  const h = size;
+
+  if (!showText) {
+    // Icon only — just the R with speech bubble
+    return (
+      <svg width={size * 0.85} height={size} viewBox="0 0 85 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 100V0h44c8 0 14.5 1.5 19.5 4.5S72 11 74.5 16c2.5 5 3.5 10.5 3.5 16.5 0 6-1.2 11.5-3.5 16.5-2.5 5-6 9-10.5 12S54 66 46 66H20v34H0zM20 50h24c5 0 9-1.8 12-5.2 3-3.5 4.5-8 4.5-13.3 0-5.3-1.5-9.8-4.5-13.3C53 14.8 49 13 44 13H20v37z" fill={color} />
+        {/* Speech bubble */}
+        <path d="M38 24.5c-5.5 0-10 3.5-10 8s4.5 8 10 8c1.5 0 3-.3 4.2-.8l4.8 2.8-1.5-4.5c1.6-1.5 2.5-3.4 2.5-5.5 0-4.5-4.5-8-10-8z" fill={light ? BLUE : '#fff'} />
+      </svg>
+    );
+  }
 
   return (
-    <div style={{ display: 'inline-flex', alignItems: 'flex-end', gap: 0, lineHeight: 1, userSelect: 'none' }}>
-      {/* Big R with speech bubble cutout */}
-      <svg width={rHeight * 0.82} height={rHeight} viewBox="0 0 82 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        {/* R body */}
-        <path
-          d="M0 100V0h42c7.5 0 14 1.4 19.5 4.2 5.5 2.8 9.8 6.8 12.8 12 3 5.2 4.5 11.2 4.5 18 0 6.8-1.5 12.8-4.5 18-3 5.2-7.3 9.2-12.8 12C56 67 49.5 68.4 42 68.4H18V100H0zM18 52h22c5.5 0 9.8-1.6 13-4.8 3.2-3.2 4.8-7.6 4.8-13.2 0-5.6-1.6-10-4.8-13.2C49.8 17.6 45.5 16 40 16H18v36z"
-          fill={color}
-        />
-        {/* Speech bubble cutout in the R's counter */}
-        <ellipse cx="40" cy="34" rx="12" ry="10" fill={light ? BLUE : '#fff'} />
-        {/* Bubble tail */}
-        <polygon points="32,42 28,50 38,43" fill={light ? BLUE : '#fff'} />
-      </svg>
+    <svg width={w} height={h} viewBox="0 0 380 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      {/* R with speech bubble */}
+      <path d="M0 100V0h44c8 0 14.5 1.5 19.5 4.5S72 11 74.5 16c2.5 5 3.5 10.5 3.5 16.5 0 6-1.2 11.5-3.5 16.5-2.5 5-6 9-10.5 12S54 66 46 66H20v34H0zM20 50h24c5 0 9-1.8 12-5.2 3-3.5 4.5-8 4.5-13.3 0-5.3-1.5-9.8-4.5-13.3C53 14.8 49 13 44 13H20v37z" fill={color} />
+      {/* Speech bubble in R counter */}
+      <path d="M38 24.5c-5.5 0-10 3.5-10 8s4.5 8 10 8c1.5 0 3-.3 4.2-.8l4.8 2.8-1.5-4.5c1.6-1.5 2.5-3.4 2.5-5.5 0-4.5-4.5-8-10-8z" fill={light ? BLUE : '#fff'} />
 
-      {/* EPLY text */}
-      {showText !== false && (
-        <span style={{
-          fontFamily: "SF Pro Display, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif",
-          fontWeight: 800,
-          fontSize: eplySize,
-          color,
-          letterSpacing: '0.02em',
-          lineHeight: 1,
-          textTransform: 'uppercase',
-          marginBottom: size * 0.01,
-        }}>
-          EPLY
-        </span>
-      )}
-    </div>
+      {/* E */}
+      <path d="M95 100V30h40v13h-24v12h22v13h-22v19h25v13H95z" fill={color} />
+      {/* P */}
+      <path d="M145 100V30h30c6 0 11 1 15 3.5s7 5.5 9 9.5 3 8.5 3 13.5c0 5-1 9.5-3 13.5s-5 7-9 9.5-9 3.5-15 3.5h-14v17h-16zm16-30h13c3.5 0 6.2-1.2 8.2-3.5 2-2.3 3-5.5 3-9.5s-1-7.2-3-9.5c-2-2.3-4.7-3.5-8.2-3.5h-13v26z" fill={color} />
+      {/* L */}
+      <path d="M215 100V30h16v57h28v13h-44z" fill={color} />
+      {/* Y */}
+      <path d="M268 30l18 35 18-35h18l-28 48v22h-16V78l-28-48h18z" fill={color} />
+    </svg>
   );
 }
 
